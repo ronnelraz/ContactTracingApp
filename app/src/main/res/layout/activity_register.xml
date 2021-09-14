@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Register">
+
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_margin="15dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:icon="@drawable/left_arrow"
+        app:iconSize="30dp"
+        app:cornerRadius="20dp"
+        app:iconGravity="textStart"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        
+        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+            
+            <ImageView
+                android:layout_centerInParent="true"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:background="@drawable/upload"/>
+            
+        </RelativeLayout>
+
+        <com.example.contacttracingapp.RadioGridGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <TableRow android:layout_marginTop="0dp">
+
+                <RadioButton
+                    android:buttonTint="@color/purple_500"
+                    android:id="@+id/rad1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Visitor/Supplier"
+                    android:layout_marginRight="50dp"/>
+
+                <RadioButton
+                    android:buttonTint="@color/purple_500"
+                    android:id="@+id/rad2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Trucking" />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="0dp">
+
+                <RadioButton
+                    android:buttonTint="@color/purple_500"
+                    android:id="@+id/rad3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CPF Employee" />
+
+                <RadioButton
+                    android:buttonTint="@color/purple_500"
+                    android:id="@+id/rad4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Agency" />
+            </TableRow>
+
+        </com.example.contacttracingapp.RadioGridGroup>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TITLE"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"/>
+        <RadioGroup
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/purple_500"
+                android:text="MR"
+                android:layout_marginRight="10dp"/>
+
+            <RadioButton
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/purple_500"
+                android:text="MRS/MS" />
+
+
+        </RadioGroup>
+
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date of Birth (dd/MM/YYYY)"
+            android:textColor="@color/black"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"/>
+
+        <LinearLayout
+            android:layout_marginTop="1dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_marginLeft="3dp"
+                android:id="@+id/dob"
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="wrap_content"
+                android:hint="Required"
+                android:layout_gravity="left"
+                android:background="@drawable/rounded"
+                android:layout_marginRight="15dp"
+                android:textColorHint="@color/black"
+                android:textColor="@color/black"
+                android:drawableRight="@drawable/icons8_calendar_1"
+                android:drawableTint="@color/black"/>
+
+            <TextView
+                android:gravity="center"
+                android:layout_marginRight="5dp"
+                android:id="@+id/age"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="45dp"
+                android:text="Age"
+                android:layout_gravity="right"
+                android:background="@drawable/rounded"
+                android:textColorHint="@color/black"
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
+        
+        
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:checkableBehavior="single">
+    <item
+        android:id="@+id/scan"
+        android:title="Scan"
+        android:icon="@drawable/icons8_qr_code"
+        android:iconTint="@color/black"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/register"
+        android:title="Register"
+        android:icon="@drawable/icons8_add_user_male"
+        android:iconTint="@color/black"
+        app:showAsAction="never"/>
+
+
+    <item
+        android:title="Employee"
+        android:icon="@drawable/employee"
+        android:iconTint="@color/black"
+        app:showAsAction="never"/>
+
+    <item
+        android:title="Search"
+        android:icon="@drawable/icons8_find_user_male"
+        android:iconTint="@color/black"
+        app:showAsAction="never"/>
+
+
+    <item
+        android:title="Connect to Bluetooth"
+        android:icon="@drawable/icons8_bluetooth"
+        android:iconTint="@color/black"
+        app:showAsAction="never"/>
+
+
+    <item
+        android:title="Logout"
+        android:icon="@drawable/icons8_shutdown"
+        android:iconTint="@color/black"
+        app:showAsAction="never"/>
+
+
+    </group>
+
+    <item android:title="Reports">
+        <menu>
+            <group android:checkableBehavior="single">
+            <item
+                android:title="Daily Reports"
+                android:icon="@drawable/report"
+                android:iconTint="@color/black"
+                app:showAsAction="never"/>
+            <item
+                android:title="Monthly Reports"
+                android:icon="@drawable/report"
+                android:iconTint="@color/black"
+                app:showAsAction="never"/>
+            </group>
+        </menu>
+    </item>
+
+
+
+
+
+
+
+</menu>

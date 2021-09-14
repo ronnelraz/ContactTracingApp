@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:elevation="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/purple_500"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:navigationIcon="@drawable/icons8_menu"
+            app:navigationIconTint="@color/button_text_color"
+            app:title="Contact Tracing"
+            app:subtitle="Charoen Pokphand Foods Philippines"
+            app:titleTextColor="@color/button_text_color"
+            app:subtitleTextColor="@color/white"
+            style=""/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:layout_below="@+id/appbar"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/flContent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.google.android.material.navigation.NavigationView
+            app:elevation="10dp"
+            app:itemIconPadding="10dp"
+            app:itemIconSize="20dp"
+            app:itemHorizontalPadding="20dp"
+            app:itemIconTint="@color/purple_500"
+            app:itemTextColor="@color/black"
+            android:foreground="?attr/selectableItemBackground"
+            android:id="@+id/nvView"
+            app:headerLayout="@layout/navigation_header"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:layout_gravity="start"
+            android:background="#FFFFFF"
+            app:menu="@menu/menu_item" />
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+
+
+
+</RelativeLayout>
