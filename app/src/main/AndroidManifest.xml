@@ -15,6 +15,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ContactTracingApp">
         <activity
+            android:name=".DailyReports"
+            android:exported="true" />
+        <activity
+            android:name=".BluetoothConnection"
+            android:exported="true" />
+        <activity
+            android:name=".Person_details"
+            android:exported="true" />
+        <activity
+            android:name=".Search"
+            android:exported="true" />
+        <activity
+            android:name=".Employee"
+            android:exported="true" />
+        <activity
             android:name=".Register"
             android:exported="true" />
         <activity

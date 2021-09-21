@@ -45,48 +45,32 @@
 
             </RelativeLayout>
 
-            <com.example.contacttracingapp.RadioGridGroup xmlns:android="http://schemas.android.com/apk/res/android"
+
+            <TextView
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center">
+                android:text="Select Employee"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
 
-                <TableRow android:layout_marginTop="0dp">
+            <TextView
+                android:id="@+id/employee"
+                android:background="@drawable/rounded"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Required"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:drawableRight="@drawable/icons8_expand_arrow"
+                android:drawableTint="@color/black"/>
 
-                    <RadioButton
-                        android:buttonTint="@color/purple_500"
-                        android:id="@+id/rad1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Visitor/Supplier"
-                        android:layout_marginRight="50dp"/>
-
-                    <RadioButton
-                        android:buttonTint="@color/purple_500"
-                        android:id="@+id/rad2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Trucking" />
-                </TableRow>
-
-                <TableRow android:layout_marginTop="0dp">
-
-                    <RadioButton
-                        android:buttonTint="@color/purple_500"
-                        android:id="@+id/rad3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="CPF Employee" />
-
-                    <RadioButton
-                        android:buttonTint="@color/purple_500"
-                        android:id="@+id/rad4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Agency" />
-                </TableRow>
-
-            </com.example.contacttracingapp.RadioGridGroup>
 
             <TextView
                 android:layout_marginTop="10dp"
@@ -228,11 +212,12 @@
                 android:layout_marginLeft="10dp"/>
 
             <EditText
+                android:enabled="false"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/company"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:hint="Required"
+                android:text="Charoen Pokphand Foods Philippines"
                 android:inputType="text"
                 android:gravity="top|left"
                 android:background="@drawable/rounded"
@@ -240,22 +225,6 @@
                 android:textColorHint="@color/black"
                 android:textColor="@color/black" />
 
-            <TextView
-                android:id="@+id/spinnercompany"
-                tools:visibility="visible"
-                android:visibility="gone"
-                android:background="@drawable/rounded"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Required"
-                android:textColor="@color/black"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:drawableRight="@drawable/icons8_expand_arrow"
-                android:drawableTint="@color/black"/>
 
 
             <TextView
@@ -395,7 +364,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Required"
+                android:hint="Optional"
                 android:inputType="number"
                 android:textColor="@color/black"
                 android:textSize="17sp"

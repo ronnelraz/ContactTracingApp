@@ -105,31 +105,40 @@ public class Home extends AppCompatActivity {
                     case R.id.register:
                         function.intent(Register.class,Home.this);
                         break;
-
-
-
-//                        case R.id.logout:
-//                            new SweetAlertDialog(Home.this, SweetAlertDialog.WARNING_TYPE)
-//                                    .setTitleText("Are you sure?")
-//                                    .setContentText("You want to logout your account?")
-//                                    .setConfirmText("Yes")
-//                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                                        @Override
-//                                        public void onClick(SweetAlertDialog sDialog) {
-//                                            sDialog.dismissWithAnimation();
-////                                        islogin("false");
-////                                        function.intent(Login.class,Home.this);
-////                                        animIntent(Home.this,config.rtl);
-//                                        }
-//                                    })
-//                                    .setCancelButton("No", new SweetAlertDialog.OnSweetClickListener() {
-//                                        @Override
-//                                        public void onClick(SweetAlertDialog sDialog) {
-//                                            sDialog.dismissWithAnimation();
-//                                        }
-//                                    })
-//                                    .show();
-//                            break;
+                    case R.id.employee:
+                        function.intent(Employee.class,Home.this);
+                        break;
+                    case R.id.search:
+                        function.intent(Search.class,Home.this);
+                        break;
+                    case R.id.bluetooth:
+                        function.intent(BluetoothConnection.class,Home.this);
+                        break;
+                    case R.id.logout:
+                            new SweetAlertDialog(Home.this, SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("Are you sure?")
+                                    .setContentText("You want to logout your account?")
+                                    .setConfirmText("Yes")
+                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sDialog) {
+                                            sDialog.dismissWithAnimation();
+//                                        islogin("false");
+//                                        function.intent(Login.class,Home.this);
+//                                        animIntent(Home.this,config.rtl);
+                                        }
+                                    })
+                                    .setCancelButton("No", new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sDialog) {
+                                            sDialog.dismissWithAnimation();
+                                        }
+                                    })
+                                    .show();
+                        break;
+                    case R.id.daily:
+                        function.intent(DailyReports.class,Home.this);
+                        break;
                 }
 
                 return true;

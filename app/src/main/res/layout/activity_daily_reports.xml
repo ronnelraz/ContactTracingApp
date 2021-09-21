@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".DailyReports">
+
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:title="Daily Report"
+            app:titleTextColor="@color/white"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <Spinner
+        android:layout_margin="5dp"
+        style="@style/DropDown_PowerSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/bu"/>
+
+
+    <LinearLayout
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="Date To"
+            android:layout_marginRight="25dp"/>
+
+        <TextView
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="Date To"/>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <EditText
+            android:layout_marginRight="10dp"
+            android:backgroundTint="#D5E1ED"
+            android:background="@drawable/rounded"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            tools:text="September 17, 2021"
+            android:drawableLeft="@drawable/icons8_calendar_1"
+            android:drawablePadding="5dp"
+            android:drawableTint="@color/purple_500"
+            android:textSize="15sp"/>
+
+        <EditText
+            android:backgroundTint="#D5E1ED"
+            android:background="@drawable/rounded"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            tools:text="September 17, 2021"
+            android:drawableLeft="@drawable/icons8_calendar_1"
+            android:drawablePadding="5dp"
+            android:drawableTint="@color/purple_500"
+            android:textSize="15sp"/>
+
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
