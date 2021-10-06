@@ -29,8 +29,15 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
+import com.example.contacttracingapp.config._appscantemp;
+import com.example.contacttracingapp.config._login;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
@@ -39,6 +46,10 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,6 +73,7 @@ public class Home extends AppCompatActivity {
     FrameLayout container;
 
     TextView fullname, address;
+    private AlertDialog alert;
 
 
     //qrcode
@@ -69,6 +81,7 @@ public class Home extends AppCompatActivity {
     ArrayList<String> qrcodeData = new ArrayList<>();
     //textwatcher
      private boolean enabledSaveQrcodeScan = false;
+     private MaterialButton saveScan;
 
 
 
@@ -91,8 +104,8 @@ public class Home extends AppCompatActivity {
             View headerView = navigationView.getHeaderView(0);
             fullname = headerView.findViewById(R.id.fullname);
             address = headerView.findViewById(R.id.address);
-            fullname.setText("Test");
-            address.setText("Address");
+            fullname.setText(function.getInstance(this).getFullname());
+            address.setText("Contact Tracing User");
 
 
 
@@ -123,9 +136,9 @@ public class Home extends AppCompatActivity {
                                         @Override
                                         public void onClick(SweetAlertDialog sDialog) {
                                             sDialog.dismissWithAnimation();
-//                                        islogin("false");
-//                                        function.intent(Login.class,Home.this);
-//                                        animIntent(Home.this,config.rtl);
+                                            function.getInstance(Home.this).setAccount(Arrays.asList("","","false",""));
+                                            function.intent(MainActivity.class,Home.this);
+                                            finish();
                                         }
                                     })
                                     .setCancelButton("No", new SweetAlertDialog.OnSweetClickListener() {
@@ -185,12 +198,12 @@ public class Home extends AppCompatActivity {
                                     Log.d("data",result.getText());
                                     String[] data = result.getText().split(",");
 
-                                    //add array method tamad kasi ako
-                                    addlistQrcode(Arrays.asList(data[3],data[5],data[7],data[9],data[11],data[13],data[15],data[17],data[19],data[21],data[23]));
-                                    if(data[1].equals("true")){
-                                        if(data[0].equals("cpfp")){
 
-                                            open_modal_temperature(Arrays.asList(
+
+                                 if(data[0].equals("cpfp")){
+                                     addlistQrcode(Arrays.asList(data[3],data[5],data[7],data[9],data[11],data[13],data[15],data[17],data[19],data[21],data[23]));
+                                     if(data[1].equals("true")){
+                                         open_modal_temperature(Arrays.asList(
                                                     qrcodeData.get(0),
                                                     qrcodeData.get(1),
                                                     qrcodeData.get(2),
@@ -202,16 +215,16 @@ public class Home extends AppCompatActivity {
                                                     qrcodeData.get(8),
                                                     qrcodeData.get(9),
                                                     qrcodeData.get(10)));
-
-                                        }
-                                        else{
-                                            function.getInstance(getApplicationContext()).toast("Invalid QR Code");
-                                        }
-                                    }
-                                    else{
-                                        function.getInstance(getApplicationContext()).toast("Invalid QR Code");
-                                    }
-
+                                     }
+                                     else{
+                                         function.getInstance(getApplicationContext()).errorEffect();
+                                         function.getInstance(getApplicationContext()).toast("Invalid QR Code");
+                                     }
+                                 }
+                                 else{
+                                     function.getInstance(getApplicationContext()).errorEffect();
+                                     function.getInstance(getApplicationContext()).toast("Invalid QR Code");
+                                 }
                                     alert.dismiss();
                                 }));
 
@@ -243,7 +256,7 @@ public class Home extends AppCompatActivity {
             qrcodeData.addAll(data);
         }
 
-        @SuppressLint("SetTextI18n")
+
         private void open_modal_temperature(List<String> data){
             AlertDialog.Builder dialog = new AlertDialog.Builder(Home.this);
             View vs = LayoutInflater.from(Home.this).inflate(R.layout.modal_tempareture, null);
@@ -262,31 +275,69 @@ public class Home extends AppCompatActivity {
 
             TextView fullname = vs.findViewById(R.id.fullname);
             EditText temperature = vs.findViewById(R.id.temperature);
-            MaterialButton saveScan = vs.findViewById(R.id.saveScan);
+            saveScan = vs.findViewById(R.id.saveScan);
             fullname.setText(data.get(8) + " " + data.get(3) + " " + data.get(4));
 
             tempTextWatcher(temperature,saveScan);
 
             dialog.setView(vs);
-            AlertDialog alert = dialog.create();
+            alert = dialog.create();
             saveScan.setOnClickListener(v -> {
-                double temp = Double.parseDouble(temperature.getText().toString());
-                if(temp <= 30.0){
-                    AlertDialog(R.drawable.low,"Low Temperature!","Low");
-                }
-                else if(temp >= 37.5){
-                    AlertDialog(R.drawable.warning,"High Temperature!","High");
-                }
-                else{
-                    AlertDialog(R.drawable.passed,"Normal Temperature!","Normal");
-                }
-                alert.dismiss();
+
+                Response.Listener<String> response = new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean success = jsonResponse.getBoolean("success");
+
+                            if(success){
+                                alert.dismiss();
+                                double temp = Double.parseDouble(temperature.getText().toString());
+                                if(temp <= 30.0){
+                                    AlertDialog(R.drawable.low,"Low Temperature!","Low");
+                                }
+                                else if(temp >= 37.5){
+                                    AlertDialog(R.drawable.warning,"High Temperature!","High");
+                                }
+                                else{
+                                    AlertDialog(R.drawable.passed,"Normal Temperature!","Normal");
+                                }
+
+                            }
+                            else{
+                                saveScan.setEnabled(true);
+                                function.getInstance(Home.this).toast("Error");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                Response.ErrorListener errorListener = new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String result = function.getInstance(Home.this).Errorvolley(error);
+                        function.getInstance(Home.this).toast(result);
+                    }
+                };
+                _appscantemp get = new _appscantemp(data.get(3),data.get(4),function.getInstance(Home.this).getUserId(),data.get(6).substring(1),temperature.getText().toString(),response,errorListener);
+                RequestQueue queue = Volley.newRequestQueue(this);
+                get.setRetryPolicy(new DefaultRetryPolicy(
+                        0,
+                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                queue.add(get);
+                saveScan.setEnabled(false);
+
             });
             alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             alert.setCanceledOnTouchOutside(false);
             alert.setCancelable(true);
             alert.show();
         }
+
 
 
         protected void AlertDialog(int icon,String msg,String title){
@@ -296,6 +347,8 @@ public class Home extends AppCompatActivity {
                     .setCustomImage(icon)
                     .show();
         }
+
+
 
 
         private void tempTextWatcher(EditText editText,MaterialButton save){

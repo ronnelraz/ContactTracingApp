@@ -47,6 +47,7 @@
 
 
             <EditText
+                android:id="@+id/username"
                 android:textSize="13sp"
                 android:drawableLeft="@drawable/username"
                 android:drawablePadding="5dp"

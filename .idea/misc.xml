@@ -5,9 +5,13 @@
       <map>
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/drawable/bottom.xml" value="0.2703125" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/drawable/employee_png.xml" value="0.2703125" />
+        <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/drawable/ic_bar_chart.xml" value="0.2703125" />
+        <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/drawable/ic_girl.xml" value="0.2703125" />
+        <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/drawable/ic_graph.xml" value="0.2703125" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/drawable/ic_icons8_available_updates_1.xml" value="0.2703125" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/drawable/ic_icons8_plus__.xml" value="0.2703125" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/drawable/ic_icons8_plus___1.xml" value="0.2703125" />
+        <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/drawable/ic_man.xml" value="0.2703125" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/drawable/iconlogo.xml" value="0.2703125" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/drawable/icons8_calendar_1.xml" value="0.2703125" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/drawable/icons8_ok_2.xml" value="0.2703125" />
@@ -21,7 +25,7 @@
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/drawable/username.xml" value="0.2703125" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/drawable/visible.xml" value="0.2703125" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_bluetooth_connection.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_daily_reports.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_daily_reports.xml" value="0.264" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_employee.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_home.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_main.xml" value="0.264" />
