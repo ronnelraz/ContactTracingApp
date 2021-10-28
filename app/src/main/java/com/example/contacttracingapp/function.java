@@ -5,8 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
@@ -14,6 +19,7 @@ import com.android.volley.ParseError;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.novoda.merlin.Merlin;
 
 import java.util.List;
 
@@ -24,6 +30,7 @@ public class function {
     private static function app;
     private static Context cont;
     public static SweetAlertDialog pDialog;
+    public Merlin merlin;
 
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
@@ -79,6 +86,26 @@ public class function {
         editor.putString(AD,list.get(3));
         editor.apply();
         return true;
+    }
+
+
+
+
+    public void toastip(int raw,String body){
+        Toast toast = new Toast(cont);
+        View vs = LayoutInflater.from(cont).inflate(R.layout.custom_toast, null);
+        LottieAnimationView icon = vs.findViewById(R.id.icon);
+        TextView msg = vs.findViewById(R.id.body);
+
+        icon.setAnimation(raw);
+        icon.loop(false);
+        icon.playAnimation();
+        msg.setText(body);
+        toast.setGravity(Gravity.TOP|Gravity.RIGHT, 50, 50);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setText("System Notification");
+        toast.setView(vs);
+        toast.show();
     }
 
 

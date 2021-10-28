@@ -54,7 +54,9 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.novoda.merlin.Bindable;
 import com.novoda.merlin.Merlin;
+import com.novoda.merlin.NetworkStatus;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -111,7 +113,7 @@ public class Home extends AppCompatActivity {
     public static List<gs_scanned_all> list;
     @BindView(R.id.loading)
     LottieAnimationView loading;
-    Merlin merlin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,50 +137,33 @@ public class Home extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new Adapter_scanned(list,getApplicationContext());
         recyclerView.setAdapter(adapter);
+
+
         getallScanned();
-         merlin = new Merlin.Builder().withConnectableCallbacks().build(this);
-
-        merlin.registerConnectable(() -> {
+        function.getInstance(this).merlin = new Merlin.Builder().withAllCallbacks().build(this);
+        function.getInstance(this).merlin.registerConnectable(() -> {
             getallScanned();
-//            toastip(R.raw.wifi,"Connected Successful");
-        });
-        merlin.registerDisconnectable(() -> {
-            no_connection();
-//            toastip(R.raw.error_con,"Could not connect to the server");
+            function.getInstance(this).toastip(R.raw.wifi,"Connecting to the server...");
         });
 
+        function.getInstance(this).merlin.registerDisconnectable(() -> {
+            getallScanned();
+//            function.getInstance(this).toastip(R.raw.error_con,"Could not connect to the server.");
+        });
     }
 
 
-//    protected void toastip(int raw,String body){
-//        LayoutInflater inflater = getLayoutInflater();
-//        View layout = inflater.inflate(R.layout.custom_toast,findViewById(R.id.toastip));
-//
-//        LottieAnimationView icon = layout.findViewById(R.id.icon);
-//        TextView content = layout.findViewById(R.id.text);
-//
-//        icon.setAnimation(raw);
-//        icon.loop(false);
-//        icon.playAnimation();
-//        content.setText(body);
-//
-//
-//        Toast toast = new Toast(getApplicationContext());
-//        toast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0);
-//        toast.setDuration(Toast.LENGTH_LONG);
-//        toast.setView(layout);
-//        toast.show();
-//    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
-        merlin.bind();
+        function.getInstance(this).merlin.bind();
     }
 
     @Override
     protected void onPause() {
-        merlin.unbind();
+        function.getInstance(this).merlin.unbind();
         super.onPause();
     }
 
@@ -218,7 +203,8 @@ public class Home extends AppCompatActivity {
         };
         Response.ErrorListener errorListener = error -> {
             String result = function.getInstance(getApplicationContext()).Errorvolley(error);
-            function.getInstance(getApplicationContext()).toast(result);
+            function.getInstance(getApplicationContext()).toastip(R.raw.error_con,result);
+            loading.setVisibility(View.VISIBLE);
             no_connection();
         };
         all_scanned get = new all_scanned(response,errorListener);

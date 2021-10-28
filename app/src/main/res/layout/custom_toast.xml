@@ -6,7 +6,9 @@
     android:layout_margin="5dp"
     app:cardCornerRadius="20dp"
     android:id="@+id/toastip"
-    app:cardBackgroundColor="#F0F3ED"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardMaxElevation="10dp"
+    app:cardElevation="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
@@ -19,22 +21,24 @@
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
             android:id="@+id/icon"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             app:lottie_autoPlay="true"
             app:lottie_renderMode="automatic"
             app:lottie_loop="true"/>
 
 
         <TextView
-            android:id="@+id/content"
-            android:layout_marginLeft="100dp"
+            android:paddingRight="10dp"
+            android:textSize="14sp"
+            android:id="@+id/body"
+            android:layout_marginLeft="50dp"
             android:layout_centerInParent="true"
             android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="@tools:sample/lorem"/>
-        
+
     </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>

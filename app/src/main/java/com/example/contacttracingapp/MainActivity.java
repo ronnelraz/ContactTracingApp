@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 String result = function.getInstance(MainActivity.this).Errorvolley(error);
-                function.getInstance(MainActivity.this).toast(result);
+                function.getInstance(MainActivity.this).toastip(R.raw.error_con,result);
                 function.pDialog.dismissWithAnimation();
             }
         };

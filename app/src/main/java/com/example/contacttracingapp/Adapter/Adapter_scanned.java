@@ -7,6 +7,8 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.contacttracingapp.GetterSetter.gs_area;
 import com.example.contacttracingapp.GetterSetter.gs_scanned_all;
 import com.example.contacttracingapp.R;
+import com.example.contacttracingapp.animation.Mybounce;
 import com.example.contacttracingapp.function;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -24,7 +27,7 @@ import java.util.List;
 
 public class Adapter_scanned extends RecyclerView.Adapter<Adapter_scanned.ViewHolder> {
     Context mContext;
-
+    Animation myAnim;
     List<gs_scanned_all> newsList;
 
 
@@ -46,13 +49,19 @@ public class Adapter_scanned extends RecyclerView.Adapter<Adapter_scanned.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         final gs_scanned_all getData = newsList.get(position);
+
+        myAnim = AnimationUtils.loadAnimation(mContext, R.anim.bounce);
+        Mybounce interpolator = new Mybounce(0.2, 20);
+        myAnim.setInterpolator(interpolator);
+        holder.card.setAnimation(myAnim);
+
         holder.category.setText(getData.getType());
         holder.temp.setText(getData.getTemp() + "°C");
         holder.name.setText(getData.getName());
         holder.company.setText(getData.getCompany());
         holder.date.setText(getData.getDate());
 
-        String ifpassed = Double.parseDouble(getData.getTemp()) >= 37.5 ? "High Temp" : "Passed";
+        String ifpassed = Double.parseDouble(getData.getTemp()) >= 37.5 ? "Warning" : "Passed";
         int iconpassed = Double.parseDouble(getData.getTemp()) >= 37.5 ? R.drawable.warning_1 : R.drawable.icons8_ok_3;
         Drawable img = mContext.getResources().getDrawable(iconpassed);
         holder.passed.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
