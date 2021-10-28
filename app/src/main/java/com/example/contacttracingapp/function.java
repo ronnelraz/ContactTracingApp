@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -17,12 +15,6 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.PublicKey;
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -40,8 +32,8 @@ public class function {
     private static final String FULLNAME = "FULLNAME";
     private static final String AD       = "AD";
     private static final String LOGIN = "false";
-
     private static final String SET_AREA = "AREA";
+    private static final String SET_SHORTCODE = "AREA_CODE";
 
 
     public function(Context context){
@@ -55,6 +47,29 @@ public class function {
         return app;
     }
 
+
+    public boolean setSelectedAreas(String area,String area_code){
+        sharedPreferences = cont.getSharedPreferences(DATA,Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        editor.putString(SET_AREA,area);
+        editor.putString(SET_SHORTCODE,area_code);
+        editor.apply();
+        return true;
+    }
+
+    public String getAreas(){
+        sharedPreferences = cont.getSharedPreferences(DATA, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(SET_AREA,"");
+    }
+
+    public String getAreas_code(){
+        sharedPreferences = cont.getSharedPreferences(DATA, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(SET_SHORTCODE,"");
+    }
+
+
+
+
     public boolean setAccount(List<String> list){
         sharedPreferences = cont.getSharedPreferences(DATA,Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -67,7 +82,7 @@ public class function {
     }
 
 
-    public String getAD(){
+    public String login(){
         sharedPreferences = cont.getSharedPreferences(DATA, Context.MODE_PRIVATE);
         return sharedPreferences.getString(AD,"");
     }
@@ -104,9 +119,15 @@ public class function {
                 .show();
     }
 
+    public void SuccessResponse(String msg,Context context){
+        new SweetAlertDialog(context,SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText(msg)
+                .show();
+    }
+
 
     public void errorEffect(){
-        MediaPlayer err = MediaPlayer.create(cont,R.raw.error);
+        MediaPlayer err = MediaPlayer.create(cont,R.raw.error_con);
         err.start();
     }
 

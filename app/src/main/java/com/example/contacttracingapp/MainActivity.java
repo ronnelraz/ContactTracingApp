@@ -9,7 +9,11 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -17,13 +21,19 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.example.contacttracingapp.Adapter.Adapter_area;
+import com.example.contacttracingapp.GetterSetter.gs_area;
+import com.example.contacttracingapp.config._areas;
 import com.example.contacttracingapp.config._login;
+import com.example.contacttracingapp.config.loginAreaLocation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +45,14 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.username)
     EditText username;
     private  boolean showpassword = true;
+    @BindView(R.id.location)
+    Spinner location;
+    List<String> list_location_code = new ArrayList<>();;
+    List<String> list_location_name = new ArrayList<>();;
+    SpinnerAdapter locationAdapter;
+
+
+    private String getPlant_code,getPlant_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             function.intent(Home.class,MainActivity.this);
             finish();
         }
+        loadLocation();
 
     }
 
@@ -54,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
     public void login(View view) {
         String getUsername = username.getText().toString();
         String getPassword = password.getText().toString();
+        String getCode = getPlant_code;
+        String getName = getPlant_name;
 
         if(getUsername.isEmpty()){
             function.getInstance(this).Error("Username","Please Enter your username");
@@ -63,10 +84,13 @@ public class MainActivity extends AppCompatActivity {
             function.getInstance(this).Error("Password","Please Enter your Password");
             password.requestFocus();
         }
+        else if(getCode.equals("0")){
+            function.getInstance(this).Error("Location","Please Select location");
+            location.performClick();
+        }
         else{
-
             function.getInstance(this).loading();
-            login(getUsername,getPassword);
+            login(getUsername,getPassword,getCode,getName);
         }
 
 
@@ -74,8 +98,73 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    private void loadLocation(){
+        list_location_name.clear();
+        list_location_code.clear();
+        Response.Listener<String> response = response1 -> {
+            try {
+                JSONObject jsonResponse = new JSONObject(response1);
+                boolean success = jsonResponse.getBoolean("success");
+                JSONArray array = jsonResponse.getJSONArray("data");
 
-    protected void login(String getusername,String getpassword){
+
+
+                if(success){
+                    list_location_code.add("0");
+                    list_location_name.add("Select Location");
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject object = array.getJSONObject(i);
+
+                        list_location_code.add(object.getString("plant_code"));
+                        list_location_name.add(object.getString("plant_name"));
+                    }
+
+
+                    locationAdapter = new ArrayAdapter<>(this,R.layout.spinner_area, list_location_name);
+                    location.setAdapter(locationAdapter);
+
+
+
+                    location.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            String code = list_location_code.get(position);
+                            String name = list_location_name.get(position);
+
+                            getPlant_code = code;
+                            getPlant_name = name;
+//                            function.getInstance(getApplicationContext()).toast(code);
+//                            function.getInstance(getApplicationContext()).toast(name);
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+
+
+
+
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        };
+        Response.ErrorListener errorListener = new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        };
+        loginAreaLocation get = new loginAreaLocation(response,errorListener);
+        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+        queue.add(get);
+
+    }
+
+    private void login(String getusername,String getpassword,String Code,String name){
 
         Response.Listener<String> response = new Response.Listener<String>() {
             @Override
@@ -96,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
                             String fullname = object.getString("FULLNAME");
                             String status = object.getString("STATUS");
                             function.getInstance(getApplicationContext()).setAccount(Arrays.asList(id,fullname,"true",getusername));
-
+                            function.getInstance(getApplicationContext()).setSelectedAreas(name,Code);
                         }
 
                     }
@@ -120,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
         };
         _login get = new _login(getusername,getpassword,response,errorListener);
         get.setRetryPolicy(new DefaultRetryPolicy(
-                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
+                20000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -129,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @SuppressLint("ClickableViewAccessibility")
-    protected void togglePassword(EditText editText){
+    private void togglePassword(EditText editText){
         editText.setOnTouchListener((v, event) -> {
             final int DRAWABLE_RIGHT = 2;
             if(event.getAction() == MotionEvent.ACTION_UP) {

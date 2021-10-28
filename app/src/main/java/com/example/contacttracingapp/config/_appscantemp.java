@@ -12,7 +12,7 @@ public class _appscantemp extends StringRequest {
     public static final String con = config.URL + "appscantemp";
     private Map<String,String> params;
 
-    public _appscantemp(String name,String lname,String AD,String contact,String temp, Response.Listener<String> Listener, Response.ErrorListener errorListener){
+    public _appscantemp(String name,String lname,String AD,String contact,String temp, String vaccine,Response.Listener<String> Listener, Response.ErrorListener errorListener){
         super(Method.POST,con,Listener,errorListener);
         params = new HashMap<>();
         params.put("name",name);
@@ -20,6 +20,7 @@ public class _appscantemp extends StringRequest {
         params.put("AD",AD);
         params.put("contact",contact);
         params.put("temp",temp);
+        params.put("vaccine",vaccine);
     }
 
     @Override

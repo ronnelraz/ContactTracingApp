@@ -39,6 +39,7 @@
                 android:src="@drawable/cpf"/>
 
             <TextView
+                android:textSize="20sp"
                 android:textAlignment="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,26 +47,45 @@
 
 
 
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:layout_marginLeft="5dp"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+
+
             <EditText
                 android:id="@+id/username"
-                android:textSize="13sp"
+                android:textSize="18sp"
                 android:drawableLeft="@drawable/username"
                 android:drawablePadding="5dp"
                 android:drawableTint="@color/purple_500"
                 android:hint="Username"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="60dp"
                 android:singleLine="true"
                 android:inputType="text"
                 android:background="@drawable/rounded"/>
 
 
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Password"
+                android:layout_marginLeft="5dp"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
             <EditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="60dp"
                 android:background="@drawable/rounded"
                 android:drawableLeft="@drawable/password"
                 android:drawableRight="@drawable/visible"
@@ -74,7 +94,48 @@
                 android:hint="Password"
                 android:inputType="textPassword"
                 android:singleLine="true"
-                android:textSize="13sp" />
+                android:textSize="18sp" />
+
+
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Location"
+                android:layout_marginLeft="5dp"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+           <RelativeLayout
+               android:padding="4dp"
+               android:background="@drawable/spinner_border"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+
+               <Spinner
+                   android:id="@+id/location"
+                   android:layout_width="match_parent"
+                   android:layout_height="50dp"
+                   android:layout_alignParentLeft="true"
+                   android:layout_centerVertical="true"
+                   android:layout_gravity="center"
+                   android:layout_marginLeft="5dp"
+                   android:background="@android:color/transparent"
+                   android:gravity="center"
+                   tools:listitem="@layout/spinner_area" />
+
+               <ImageView
+                   android:layout_marginRight="10dp"
+                   android:layout_width="25dp"
+                   android:layout_height="25dp"
+                   android:layout_alignParentRight="true"
+                   android:layout_centerVertical="true"
+                   android:layout_gravity="center"
+                   android:backgroundTint="@color/purple_500"
+                   android:background="@drawable/icons8_expand_arrow" />
+
+           </RelativeLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:onClick="login"

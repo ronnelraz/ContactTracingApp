@@ -8,7 +8,6 @@
 
 
 
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -19,14 +18,32 @@
 
 
             <RelativeLayout
+                android:layout_margin="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="150dp">
+                android:layout_height="200dp">
+
+
+
 
                 <ImageView
+                    android:id="@+id/imageoutput"
+                    android:layout_width="match_parent"
+                    android:layout_height="170dp"
                     android:layout_centerInParent="true"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:background="@drawable/upload"/>
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/id" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/opencamera"
+                    android:layout_width="50dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginRight="5dp"
+                    app:cornerRadius="50dp"
+                    app:icon="@drawable/camera_to_take_photos"
+                    app:iconGravity="start"
+                    app:iconSize="19dp" />
 
 
                 <com.google.android.material.button.MaterialButton
@@ -42,7 +59,6 @@
                     app:iconGravity="textStart"
                     />
 
-
             </RelativeLayout>
 
             <com.example.contacttracingapp.RadioGridGroup xmlns:android="http://schemas.android.com/apk/res/android"
@@ -51,7 +67,8 @@
                 android:layout_gravity="center"
                 android:gravity="center">
 
-                <TableRow android:layout_marginTop="0dp">
+                <TableRow android:layout_marginTop="0dp"
+                    android:gravity="center">
 
                     <RadioButton
                         android:buttonTint="@color/purple_500"
@@ -69,7 +86,8 @@
                         android:text="Trucking" />
                 </TableRow>
 
-                <TableRow android:layout_marginTop="0dp">
+                <TableRow android:layout_marginTop="0dp"
+                    android:gravity="center">
 
                     <RadioButton
                         android:buttonTint="@color/purple_500"
@@ -140,6 +158,7 @@
                 android:orientation="horizontal">
 
                 <EditText
+                    android:inputType="number"
                     android:layout_marginLeft="3dp"
                     android:id="@+id/dob"
                     android:layout_width="0dp"
@@ -160,7 +179,7 @@
                     android:id="@+id/age"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="45dp"
+                    android:layout_height="43dp"
                     android:text="Age"
                     android:layout_gravity="right"
                     android:background="@drawable/rounded"
@@ -226,6 +245,25 @@
                 android:textSize="17sp"
                 android:textStyle="bold"
                 android:layout_marginLeft="10dp"/>
+
+
+            <TextView
+                android:id="@+id/spinnerSelectCompany"
+                tools:visibility="visible"
+                android:visibility="gone"
+                android:background="@drawable/rounded"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Required"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:drawableRight="@drawable/icons8_expand_arrow"
+                android:drawableTint="@color/black"/>
+
 
             <EditText
                 android:layout_marginLeft="10dp"
@@ -423,6 +461,7 @@
                     android:layout_marginRight="5dp"
                     app:icon="@drawable/ic_icons8_ok_1"
                     android:text="Submit"
+                    android:id="@+id/save"
                     app:iconGravity="textStart"
                     app:iconSize="20dp"/>
 
@@ -434,6 +473,7 @@
                     android:layout_weight="1"
                     app:icon="@drawable/ic_icons8_no"
                     android:text="Close"
+                    android:id="@+id/close"
                     app:iconGravity="textStart"
                     app:iconSize="20dp"/>
 

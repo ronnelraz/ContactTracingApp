@@ -39,7 +39,95 @@
             android:id="@+id/flContent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+
+          <RelativeLayout
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+
+
+              <com.google.android.material.textfield.TextInputEditText
+                  android:id="@+id/search"
+                  android:layout_width="match_parent"
+                  android:layout_height="55dp"
+                  android:layout_alignParentTop="true"
+                  android:layout_marginStart="10dp"
+                  android:layout_marginTop="10dp"
+                  android:layout_marginEnd="10dp"
+                  android:layout_marginBottom="10dp"
+                  android:background="@drawable/rounded"
+                  android:drawableLeft="@drawable/ic_icons8_search_client_1"
+                  android:drawablePadding="10dp"
+                  android:drawableTint="#2c3e50"
+                  android:hint="Search Scan"
+                  android:singleLine="true"
+                  android:textColorHint="#95a5a6" />
+
+
+              <androidx.recyclerview.widget.RecyclerView
+                  android:id="@+id/data"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:layout_below="@+id/search"
+                  tools:itemCount="2"
+                  tools:listitem="@layout/transaction_record_list" />
+
+              <com.airbnb.lottie.LottieAnimationView
+                  android:layout_centerInParent="true"
+                  android:id="@+id/loading"
+                  android:layout_width="200dp"
+                  android:layout_height="200dp"
+                  app:lottie_rawRes="@raw/loading"
+                  app:lottie_autoPlay="true"
+                  app:lottie_renderMode="automatic"
+                  app:lottie_loop="true"/>
+
+
+              <com.google.android.material.tabs.TabLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentBottom="true"
+                  app:tabBackground="@color/purple_500"
+                  app:tabIconTint="@color/white"
+                  app:tabMode="fixed"
+                  app:tabGravity="fill"
+                  app:tabIndicatorFullWidth="false"
+                  app:tabSelectedTextColor="@color/white"
+                  app:tabTextColor="@color/white">
+
+                  <com.google.android.material.tabs.TabItem
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:icon="@drawable/scanner_1"
+                      android:text="Scan" />
+
+                  <com.google.android.material.tabs.TabItem
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:icon="@drawable/icons8_add_user_male_1"
+                      android:text="Register" />
+
+                  <com.google.android.material.tabs.TabItem
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:icon="@drawable/icons8_conference_1"
+                      android:text="Employee" />
+
+                  <com.google.android.material.tabs.TabItem
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:icon="@drawable/ic_icons8_search_client_1"
+                      android:text="Search" />
+
+              </com.google.android.material.tabs.TabLayout>
+
+
+          </RelativeLayout>
+
+        </FrameLayout>
 
         <com.google.android.material.navigation.NavigationView
             app:elevation="10dp"
