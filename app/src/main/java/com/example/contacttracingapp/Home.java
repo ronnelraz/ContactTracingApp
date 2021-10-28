@@ -49,6 +49,7 @@ import com.example.contacttracingapp.config.vaccinated;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputEditText;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -114,6 +115,9 @@ public class Home extends AppCompatActivity {
     @BindView(R.id.loading)
     LottieAnimationView loading;
 
+    @BindView(R.id.search)
+    TextInputEditText search;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +143,8 @@ public class Home extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 
-        getallScanned();
+//        getallScanned();
+        filterScanned();
         function.getInstance(this).merlin = new Merlin.Builder().withAllCallbacks().build(this);
         function.getInstance(this).merlin.registerConnectable(() -> {
             getallScanned();
@@ -154,6 +159,37 @@ public class Home extends AppCompatActivity {
 
 
 
+    private void filterScanned(){
+
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                ArrayList<gs_scanned_all> newList = new ArrayList<>();
+
+                for (gs_scanned_all sub : list)
+                {
+
+                    String name = sub.getName().toLowerCase();
+                    if(name.contains(charSequence)){
+                        newList.add(sub);
+                    }
+                    adapter = new Adapter_scanned(newList, getApplicationContext());
+                    recyclerView.setAdapter(adapter);
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
 
     @Override
     protected void onResume() {
@@ -314,6 +350,7 @@ public class Home extends AppCompatActivity {
             switch (item.getItemId()){
                 case R.id.scan:
                     scanQrcode(getApplicationContext());
+                    drawerLayout.closeDrawer(Gravity.LEFT,true);
                     break;
                 case R.id.register:
                     function.intent(Register.class,Home.this);
@@ -535,7 +572,10 @@ public class Home extends AppCompatActivity {
         alert = dialog.create();
         saveScan.setOnClickListener(v -> {
             String Get_vaccinated = yes.isChecked() ? "Y" : "N";
-//            function.getInstance(getApplicationContext()).toast(Get_vaccinated);
+//            function.getInstance(getApplicationContext()).toast(data.get(6));
+            Log.d("saveScanned",
+                    data.get(3) + " " +data.get(4)+ " " +function.getInstance(Home.this).getUserId()+ " " +data.get(6)+ " " +temperature.getText().toString()+ " " +Get_vaccinated
+                    );
             Response.Listener<String> response = new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -548,14 +588,19 @@ public class Home extends AppCompatActivity {
                             alert.dismiss();
                             double temp = Double.parseDouble(temperature.getText().toString());
                             if(temp <= 30.0){
-                                AlertDialog(R.drawable.low,"Low Temperature!","Low");
+
+//                                AlertDialog(R.drawable.low,"Low Temperature!","Low");
+                                function.getInstance(getApplicationContext()).toastip(R.raw.low,"Low Temperature!");
                             }
                             else if(temp >= 37.5){
-                                AlertDialog(R.drawable.warning,"High Temperature!","High");
+                                function.getInstance(getApplicationContext()).toastip(R.raw.high,"High Temperature!");
+//                                AlertDialog(R.drawable.warning,"High Temperature!","High");
                             }
                             else{
-                                AlertDialog(R.drawable.passed,"Normal Temperature!","Normal");
+                                function.getInstance(getApplicationContext()).toastip(R.raw.ok,"Normal Temperature!");
+//                                AlertDialog(R.drawable.passed,"Normal Temperature!","Normal");
                             }
+                            getallScanned(); //reload after scanned and saved the record from the database
 
                         }
                         else{
@@ -568,14 +613,11 @@ public class Home extends AppCompatActivity {
                     }
                 }
             };
-            Response.ErrorListener errorListener = new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    String result = function.getInstance(Home.this).Errorvolley(error);
-                    function.getInstance(Home.this).toast(result);
-                }
+            Response.ErrorListener errorListener = error -> {
+                String result = function.getInstance(Home.this).Errorvolley(error);
+                function.getInstance(Home.this).toastip(R.raw.error_con,result);
             };
-            _appscantemp get = new _appscantemp(data.get(3),data.get(4),function.getInstance(Home.this).getUserId(),data.get(6).substring(1),temperature.getText().toString(),Get_vaccinated,response,errorListener);
+            _appscantemp get = new _appscantemp(data.get(3),data.get(4),function.getInstance(Home.this).getUserId(),data.get(6),temperature.getText().toString(),Get_vaccinated,response,errorListener);
             RequestQueue queue = Volley.newRequestQueue(this);
             get.setRetryPolicy(new DefaultRetryPolicy(
                     0,
@@ -655,4 +697,7 @@ public class Home extends AppCompatActivity {
     }
 
 
+    public void bottom_Scan(View view) {
+        scanQrcode(getApplicationContext());
+    }
 }
