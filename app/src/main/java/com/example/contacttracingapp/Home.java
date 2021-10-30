@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ import com.example.contacttracingapp.config.vaccinated;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -84,6 +86,7 @@ public class Home extends AppCompatActivity {
     @BindView(R.id.flContent)
     FrameLayout container;
 
+
     TextView fullname, address;
     private AlertDialog alert;
 
@@ -117,6 +120,8 @@ public class Home extends AppCompatActivity {
 
     @BindView(R.id.search)
     TextInputEditText search;
+    @BindView(R.id.tabs)
+    TabLayout tabItem;
 
 
     @Override
@@ -142,7 +147,7 @@ public class Home extends AppCompatActivity {
         adapter = new Adapter_scanned(list,getApplicationContext());
         recyclerView.setAdapter(adapter);
 
-
+        tabsLayout();
 //        getallScanned();
         filterScanned();
         function.getInstance(this).merlin = new Merlin.Builder().withAllCallbacks().build(this);
@@ -157,6 +162,36 @@ public class Home extends AppCompatActivity {
         });
     }
 
+    private void tabsLayout(){
+       tabItem.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+           @Override
+           public void onTabSelected(TabLayout.Tab tab) {
+               if(tab.getPosition() == 0){
+                   scanQrcode(getApplicationContext());
+               }
+               else if(tab.getPosition() == 1){
+                   function.intent(Register.class,Home.this);
+//                   function.getInstance(getApplicationContext()).toastip(R.raw.ok,"Register");
+               }
+               else if(tab.getPosition() == 2){
+                   function.getInstance(getApplicationContext()).toastip(R.raw.ok,"Employee");
+               }
+               else if(tab.getPosition() == 3){
+                   function.getInstance(getApplicationContext()).toastip(R.raw.ok,"Search");
+               }
+           }
+
+           @Override
+           public void onTabUnselected(TabLayout.Tab tab) {
+
+           }
+
+           @Override
+           public void onTabReselected(TabLayout.Tab tab) {
+
+           }
+       });
+    }
 
 
     private void filterScanned(){
@@ -204,52 +239,57 @@ public class Home extends AppCompatActivity {
     }
 
     protected void getallScanned(){
-        list.clear();
-        Response.Listener<String> response = response1 -> {
-            try {
-                JSONObject jsonResponse = new JSONObject(response1);
-                boolean success = jsonResponse.getBoolean("success");
-                JSONArray array = jsonResponse.getJSONArray("data");
+        try {
+            list.clear();
+            Response.Listener<String> response = response1 -> {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response1);
+                    boolean success = jsonResponse.getBoolean("success");
+                    JSONArray array = jsonResponse.getJSONArray("data");
 
 
 
-                if(success){
-                    loading.setVisibility(View.GONE);
-                    for (int i = 0; i < array.length(); i++) {
-                        JSONObject object = array.getJSONObject(i);
+                    if(success){
+                        loading.setVisibility(View.GONE);
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject object = array.getJSONObject(i);
 
-                        gs_scanned_all item = new gs_scanned_all(
-                                object.getString("type"),
-                                object.getString("name"),
-                                object.getString("temp"),
-                                object.getString("dt"),
-                                object.getString("cn")
-                        );
+                            gs_scanned_all item = new gs_scanned_all(
+                                    object.getString("type"),
+                                    object.getString("name"),
+                                    object.getString("temp"),
+                                    object.getString("dt"),
+                                    object.getString("cn")
+                            );
 
-                        list.add(item);
+                            list.add(item);
+                        }
+
+                        adapter = new Adapter_scanned(list,getApplicationContext());
+                        recyclerView.setAdapter(adapter);
                     }
 
-                    adapter = new Adapter_scanned(list,getApplicationContext());
-                    recyclerView.setAdapter(adapter);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+            };
+            Response.ErrorListener errorListener = error -> {
+                String result = function.getInstance(getApplicationContext()).Errorvolley(error);
+                function.getInstance(getApplicationContext()).toastip(R.raw.error_con,result);
+                loading.setVisibility(View.VISIBLE);
+                no_connection();
+            };
+            all_scanned get = new all_scanned(response,errorListener);
+            RequestQueue queue = Volley.newRequestQueue(Home.this);
+            get.setRetryPolicy(new DefaultRetryPolicy(
+                    0,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            queue.add(get);
+        } catch(Exception e){
+            System.out.println("error");
+        }
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        };
-        Response.ErrorListener errorListener = error -> {
-            String result = function.getInstance(getApplicationContext()).Errorvolley(error);
-            function.getInstance(getApplicationContext()).toastip(R.raw.error_con,result);
-            loading.setVisibility(View.VISIBLE);
-            no_connection();
-        };
-        all_scanned get = new all_scanned(response,errorListener);
-        RequestQueue queue = Volley.newRequestQueue(Home.this);
-        get.setRetryPolicy(new DefaultRetryPolicy(
-                0,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        queue.add(get);
     }
 
 
@@ -697,7 +737,5 @@ public class Home extends AppCompatActivity {
     }
 
 
-    public void bottom_Scan(View view) {
-        scanQrcode(getApplicationContext());
-    }
+
 }

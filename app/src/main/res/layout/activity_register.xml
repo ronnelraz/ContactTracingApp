@@ -23,8 +23,6 @@
                 android:layout_height="200dp">
 
 
-
-
                 <ImageView
                     android:id="@+id/imageoutput"
                     android:layout_width="match_parent"
@@ -47,23 +45,27 @@
 
 
                 <com.google.android.material.button.MaterialButton
+                    android:onClick="back"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_margin="15dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    app:icon="@drawable/left_arrow"
-                    app:iconSize="30dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp"
                     app:cornerRadius="20dp"
+                    app:icon="@drawable/left_arrow"
                     app:iconGravity="textStart"
-                    />
+                    app:iconSize="30dp" />
 
             </RelativeLayout>
 
             <com.example.contacttracingapp.RadioGridGroup xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/radiogroup"
                 android:layout_gravity="center"
                 android:gravity="center">
 
@@ -110,17 +112,55 @@
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="VACCINE"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
+            <RadioGroup
+                android:id="@+id/vaccine"
+                android:layout_marginLeft="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/yes"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/purple_500"
+                    android:text="YES"
+                    android:layout_marginRight="10dp"/>
+
+                <RadioButton
+                    android:id="@+id/no"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/purple_500"
+                    android:text="NO" />
+
+
+            </RadioGroup>
+
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="TITLE"
                 android:textColor="@color/black"
                 android:textSize="17sp"
                 android:textStyle="bold"
                 android:layout_marginLeft="10dp"/>
             <RadioGroup
+                android:id="@+id/title"
                 android:layout_marginLeft="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <RadioButton
+                    android:id="@+id/mr"
                     android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -129,6 +169,7 @@
                     android:layout_marginRight="10dp"/>
 
                 <RadioButton
+                    android:id="@+id/mrs"
                     android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -409,6 +450,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Required"
+                android:maxLength="11"
                 android:inputType="number"
                 android:textColor="@color/black"
                 android:textSize="17sp"
@@ -434,7 +476,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Required"
-                android:inputType="number"
+                android:inputType="text"
                 android:textColor="@color/black"
                 android:textSize="17sp"
                 android:textStyle="bold"

@@ -93,11 +93,11 @@
                   app:tabIconTint="@color/white"
                   app:tabIndicatorFullWidth="false"
                   app:tabMode="fixed"
+                  android:id="@+id/tabs"
                   app:tabSelectedTextColor="@color/white"
                   app:tabTextColor="@color/white">
 
                   <com.google.android.material.tabs.TabItem
-                      android:onClick="bottom_Scan"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:foreground="?attr/selectableItemBackground"

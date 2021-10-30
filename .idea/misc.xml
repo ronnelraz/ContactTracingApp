@@ -36,12 +36,14 @@
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_bluetooth_connection.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_daily_reports.xml" value="0.264" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_employee.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_home.xml" value="0.536" />
+        <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_home.xml" value="0.4" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_main.xml" value="0.536" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_person_details.xml" value="0.264" />
-        <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_register.xml" value="0.2" />
+        <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_register.xml" value="0.6" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_search.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/bluetooth_list.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/custom_company.xml" value="0.4" />
+        <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/custom_company_list.xml" value="0.38125" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/custom_toast.xml" value="0.38125" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/item_areas.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/modal_areas.xml" value="0.25416666666666665" />
