@@ -135,7 +135,7 @@ public class Home extends AppCompatActivity {
         drawableMenu();
 
         gs_areaList = new ArrayList<>();
-        checkAreas();
+        //checkAreas();
 
         list = new ArrayList<>();
         recyclerView = findViewById(R.id.data);
