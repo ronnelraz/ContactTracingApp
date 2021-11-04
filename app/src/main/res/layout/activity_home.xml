@@ -73,14 +73,14 @@
                   tools:listitem="@layout/transaction_record_list" />
 
               <com.airbnb.lottie.LottieAnimationView
-                  android:layout_centerInParent="true"
                   android:id="@+id/loading"
                   android:layout_width="200dp"
                   android:layout_height="200dp"
-                  app:lottie_rawRes="@raw/loading"
+                  android:layout_centerInParent="true"
                   app:lottie_autoPlay="true"
-                  app:lottie_renderMode="automatic"
-                  app:lottie_loop="true"/>
+                  app:lottie_loop="true"
+                  app:lottie_rawRes="@raw/loading"
+                  app:lottie_renderMode="automatic" />
 
 
               <com.google.android.material.tabs.TabLayout

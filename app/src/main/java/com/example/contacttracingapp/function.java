@@ -1,5 +1,8 @@
 package com.example.contacttracingapp;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,6 +35,12 @@ public class function {
     public static SweetAlertDialog pDialog;
     public Merlin merlin;
 
+    public BluetoothAdapter mBluetoothAdapter;
+    public BluetoothDevice mBluetoothDevice;
+    public BluetoothSocket mBluetoothSocket;
+
+    public static String[] BLUETOOTH = {"iMZ220-A", "iMZ220-B"};
+
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
     private static final String DATA = "data";
@@ -42,9 +51,37 @@ public class function {
     private static final String SET_AREA = "AREA";
     private static final String SET_SHORTCODE = "AREA_CODE";
 
+    private static final String BLUETOOTHNAME = "BTNAME";
+    private static final String BLUETOOTHADDRESS = "BTADDRESS";
+    public static final String CONNECTION_BT = "0";
+
 
     public function(Context context){
         cont = context;
+    }
+
+
+
+
+
+    public String getBTAddress(){
+        sharedPreferences = cont.getSharedPreferences(DATA, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(BLUETOOTHADDRESS,"");
+    }
+
+    public String getBTName(){
+        sharedPreferences = cont.getSharedPreferences(DATA, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(BLUETOOTHNAME,"");
+    }
+
+    public String getAD(){
+        sharedPreferences = cont.getSharedPreferences(DATA, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(AD,"");
+    }
+
+    public String getAREACODE(){
+        sharedPreferences = cont.getSharedPreferences(DATA, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(SET_SHORTCODE,"");
     }
 
     public static synchronized function getInstance(Context context){
@@ -52,6 +89,15 @@ public class function {
             app = new function(context);
         }
         return app;
+    }
+
+    public boolean SETBLUETOOTHDEVICE(List<String> data){
+        sharedPreferences = cont.getSharedPreferences(DATA,Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        editor.putString(BLUETOOTHNAME,data.get(0));
+        editor.putString(BLUETOOTHADDRESS,data.get(1));
+        editor.apply();
+        return true;
     }
 
 

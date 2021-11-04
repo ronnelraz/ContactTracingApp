@@ -174,10 +174,10 @@ public class Home extends AppCompatActivity {
 //                   function.getInstance(getApplicationContext()).toastip(R.raw.ok,"Register");
                }
                else if(tab.getPosition() == 2){
-                   function.getInstance(getApplicationContext()).toastip(R.raw.ok,"Employee");
+                   Toast.makeText(Home.this, "Not Available", Toast.LENGTH_SHORT).show();
                }
                else if(tab.getPosition() == 3){
-                   function.getInstance(getApplicationContext()).toastip(R.raw.ok,"Search");
+                   function.intent(Search.class,Home.this);
                }
            }
 
@@ -396,7 +396,8 @@ public class Home extends AppCompatActivity {
                     function.intent(Register.class,Home.this);
                     break;
                 case R.id.employee:
-                    function.intent(Employee.class,Home.this);
+                    Toast.makeText(Home.this, "Not Available", Toast.LENGTH_SHORT).show();
+//                    function.intent(Employee.class,Home.this);
                     break;
                 case R.id.search:
                     function.intent(Search.class,Home.this);
@@ -492,19 +493,7 @@ public class Home extends AppCompatActivity {
                                              if(success){
                                                  for (int i = 0; i < array.length(); i++) {
                                                      JSONObject object = array.getJSONObject(i);
-                                                     open_modal_temperature(Arrays.asList(
-                                                             qrcodeData.get(0),
-                                                             qrcodeData.get(1),
-                                                             qrcodeData.get(2),
-                                                             qrcodeData.get(3),
-                                                             qrcodeData.get(4),
-                                                             qrcodeData.get(5),
-                                                             qrcodeData.get(6),
-                                                             qrcodeData.get(7),
-                                                             qrcodeData.get(8),
-                                                             qrcodeData.get(9),
-                                                             qrcodeData.get(10),
-                                                             object.getString("vaccinated")));
+                                                     open_modal_temperature(data[19],data[9],data[11],data[15],object.getString("vaccinated"));
 //                        function.getInstance(getApplicationContext()).toast(object.getString("vaccinated"));
 
                                                  }
@@ -566,33 +555,22 @@ public class Home extends AppCompatActivity {
 
 
 
-    private void open_modal_temperature(List<String> data){
+    private void open_modal_temperature(String title,String name,String lname,String contact,String vaccine){
+
         AlertDialog.Builder dialog = new AlertDialog.Builder(Home.this);
         View vs = LayoutInflater.from(Home.this).inflate(R.layout.modal_tempareture, null);
-
-//            19/06/2021,
-//            Employee,
-//            CHAROEN POKPHAND FOODS PHILIPPINES,
-//            RONNEL,
-//            RAZO,
-//            PANGASINAN MAPANDAN LAMBAYAN,
-//            09195464878,
-//            NXA-1234,
-//            MR,
-//            12/05/1996,
-//            24,
 
         TextView fullname = vs.findViewById(R.id.fullname);
         EditText temperature = vs.findViewById(R.id.temperature);
         saveScan = vs.findViewById(R.id.saveScan);
-        fullname.setText(data.get(8) + " " + data.get(3) + " " + data.get(4));
+        fullname.setText(title + " " + name + " " + lname);
         yes = vs.findViewById(R.id.yes);
         no = vs.findViewById(R.id.no);
         radioGroup = vs.findViewById(R.id.radioGroup);
 //        function.getInstance(getApplicationContext()).toast(data.get(11));
 
 //
-        if(data.get(11).equals("Y")){
+        if(vaccine.equals("Y")){
             radioGroup.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#E3F1E9")));
             yes.setEnabled(false);
             no.setEnabled(false);
@@ -613,9 +591,9 @@ public class Home extends AppCompatActivity {
         saveScan.setOnClickListener(v -> {
             String Get_vaccinated = yes.isChecked() ? "Y" : "N";
 //            function.getInstance(getApplicationContext()).toast(data.get(6));
-            Log.d("saveScanned",
-                    data.get(3) + " " +data.get(4)+ " " +function.getInstance(Home.this).getUserId()+ " " +data.get(6)+ " " +temperature.getText().toString()+ " " +Get_vaccinated
-                    );
+//            Log.d("saveScanned",
+//                    data.get(3) + " " +data.get(4)+ " " +function.getInstance(Home.this).getUserId()+ " " +data.get(6)+ " " +temperature.getText().toString()+ " " +Get_vaccinated
+//                    );
             Response.Listener<String> response = new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -657,12 +635,8 @@ public class Home extends AppCompatActivity {
                 String result = function.getInstance(Home.this).Errorvolley(error);
                 function.getInstance(Home.this).toastip(R.raw.error_con,result);
             };
-            _appscantemp get = new _appscantemp(data.get(3),data.get(4),function.getInstance(Home.this).getUserId(),data.get(6),temperature.getText().toString(),Get_vaccinated,response,errorListener);
+            _appscantemp get = new _appscantemp(name,lname,function.getInstance(Home.this).getUserId(),contact,temperature.getText().toString(),Get_vaccinated,response,errorListener);
             RequestQueue queue = Volley.newRequestQueue(this);
-            get.setRetryPolicy(new DefaultRetryPolicy(
-                    0,
-                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             queue.add(get);
             saveScan.setEnabled(false);
 

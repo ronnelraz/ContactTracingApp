@@ -35,7 +35,7 @@
         <TextView
             android:layout_centerInParent="true"
             android:textSize="18sp"
-            tools:text="@tools:sample/first_names"
+            android:text="Select Bluetooth Device"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -45,11 +45,8 @@
     </RelativeLayout>
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginTop="10dp"
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/bluetooth_list"
-        tools:itemCount="2"/>
-
+        android:id="@+id/bluetooth"/>
 </LinearLayout>

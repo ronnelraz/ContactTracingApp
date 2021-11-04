@@ -19,7 +19,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,7 +27,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -36,28 +36,26 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.example.contacttracingapp.Adapter.Adapter_scanned;
-import com.example.contacttracingapp.Adapter.adapter_trucking;
-import com.example.contacttracingapp.GetterSetter.gs_scanned_all;
-import com.example.contacttracingapp.GetterSetter.gs_trucking;
 import com.example.contacttracingapp.config.agency;
 import com.example.contacttracingapp.config.brgy;
 import com.example.contacttracingapp.config.city;
+import com.example.contacttracingapp.config.con_imgUpdate;
 import com.example.contacttracingapp.config.con_register;
-import com.example.contacttracingapp.config.loginAreaLocation;
+import com.example.contacttracingapp.config.con_updateregister;
+import com.example.contacttracingapp.config.config;
 import com.example.contacttracingapp.config.province;
 import com.example.contacttracingapp.config.trucking;
 import com.google.android.material.button.MaterialButton;
-
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,7 +70,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -84,28 +81,50 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-
-
-public class Register extends AppCompatActivity {
-
+public class Details extends AppCompatActivity {
 
     function controller;
-    @BindView(R.id.opencamera) MaterialButton openCamera;
-    @BindView(R.id.imageoutput) ImageView imageOutput;
-    @BindViews({R.id.spinnerSelectCompany,R.id.company}) TextView[] SpinnerSelectCompany;
-    @BindView(R.id.dob) EditText dob;
-    @BindView(R.id.age) TextView age;
-    @BindView(R.id.plate) EditText plateNo;
-    @BindView(R.id.close) MaterialButton close;
-    @BindView(R.id.save) MaterialButton saved;
-    @BindView(R.id.radiogroup) RadioGridGroup rgroup;
+
+    public static String type,cn,plate,gender,dob,age,address,contact,lname,fname,img,id,privince,city,brgy,vaccinated;
+    @BindViews({R.id.btnprint,R.id.btnmodify,R.id.btnlog,R.id.printnow})
+    MaterialButton[] actions;
+
+    @BindView(R.id.qrcode)
+    ImageView qrcode;
+    @BindView(R.id.modify)
+    RelativeLayout modify;
+    @BindView(R.id.logs) RelativeLayout logs;
+
+    @BindViews({R.id.htitle,R.id.hname,R.id.hcontact,R.id.haddress,R.id.hdob,R.id.hage,R.id.hcn,R.id.hplate})
+    TextView[] header;
+    @BindView(R.id.himg) ImageView himg;
+
+
+    // needed for communication to bluetooth device / network
+    OutputStream outputStream;
+    InputStream inputStream;
+
+    BluetoothAdapter bluetoothAdapter;
+    BluetoothDevice bluetoothDevice;
+    private BluetoothSocket bluetoothSocket;
+
+    @BindView(R.id.radiogroup) RadioGridGroup category;
+    @BindView(R.id.vaccine) RadioGroup vaccine;
     @BindView(R.id.title) RadioGroup title;
+
+    @BindView(R.id.opencamera) ImageView openCamera;
+    @BindViews({R.id.spinnerSelectCompany,R.id.company}) TextView[] SpinnerSelectCompany;
+    @BindView(R.id.dob) EditText mdob;
+    @BindView(R.id.age) TextView mage;
+    @BindView(R.id.plate) EditText mplateNo;
+    @BindView(R.id.save) MaterialButton saved;
 
     private MaterialButton ActionbButton;
     private RadioButton optionRadio;
     private  String currentPhotoPath;
-
 
     final Calendar calendar = Calendar.getInstance();
     protected String strSelectedDate;
@@ -144,35 +163,54 @@ public class Register extends AppCompatActivity {
     private String categpry = "";
     private String titled = "";
 
-    @BindView(R.id.fname) EditText fname;
-    @BindView(R.id.lname) EditText lname;
-    @BindView(R.id.company) EditText company;
-    @BindView(R.id.contact) EditText contact;
-    @BindView(R.id.vaccine) RadioGroup vaccine;
+    @BindView(R.id.fname) EditText mfname;
+    @BindView(R.id.lname) EditText mlname;
+    @BindView(R.id.company) EditText mcompany;
+    @BindView(R.id.contact) EditText mcontact;
     private boolean requiredPlate = false;
     private boolean companySelectedorNot = false;
 
-    private Bitmap bitmap;
-    private boolean Captured = false;
-    private String vaccinated = "";
+      private Bitmap bitmap;
+      private boolean Captured = false;
+    private String mvaccinated = "";
+    private RadioButton moptionRadio;
+    private  String mcurrentPhotoPath;
 
-    // needed for communication to bluetooth device / network
-    OutputStream outputStream;
-    InputStream inputStream;
 
-    BluetoothAdapter bluetoothAdapter;
-    BluetoothDevice bluetoothDevice;
-    private BluetoothSocket bluetoothSocket;
-    volatile boolean stopWorker;
+    final Calendar mcalendar = Calendar.getInstance();
+    protected String mstrSelectedDate;
+    private String mcurrent = "";
+    private String mddmmyyyy = "ddmmyyyy";
+    @BindView(R.id.back) MaterialButton close;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
         controller = new function(this);
+        header[0].setText("Title : " + gender);
+        header[1].setText("Name : " + fname + " " + lname);
+        header[2].setText("Contact : " + contact);
+        header[3].setText("Address : " + address);
+        header[4].setText("Date of Birth : " + dob);
+        header[5].setText("Age : " + age);
+        header[6].setText("Company : " + cn);
+        header[7].setText("Plate No. : " + plate);
 
+        mdob.setText(dob);
+        mage.setText(age);
+        mfname.setText(fname);
+        mlname.setText(lname);
+        openProvince.setText(privince);
+        opencity.setText(city);
+        openbarangay.setText(brgy);
+        mcontact.setText(contact);
+        mplateNo.setText(plate);
 
         OpenCameraModal();
 
@@ -184,16 +222,93 @@ public class Register extends AppCompatActivity {
             function.intent(Home.class,this);
             finish();
         });
-        save();
+
+        if(img.isEmpty()){
+            himg.setImageResource(R.drawable.user__1_);
+        }
+        else{
+            final int radius = 5;
+            final int margin = 5;
+            final Transformation transformation = new RoundedCornersTransformation(radius, margin);
+            Picasso.get().load(config.IMGURL + img).transform(new CropCircleTransformation()).fit().centerInside().rotate(90.0f).into(himg);
+        }
+
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-       FindBluetoothDevice();
+        FindBluetoothDevice();
+        save();
         try {
             openBluetoothPrinter();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        Actions(actions);
+
     }
+
+
+
+    public void Actions(MaterialButton[] button){
+       button[0].setOnClickListener(v-> {
+           qrcode.setVisibility(View.VISIBLE);
+           modify.setVisibility(View.GONE);
+           logs.setVisibility(View.GONE);
+           button[3].setVisibility(View.VISIBLE);
+       });
+
+       button[1].setOnClickListener(v-> {
+           qrcode.setVisibility(View.GONE);
+           modify.setVisibility(View.VISIBLE);
+           logs.setVisibility(View.GONE);
+           button[3].setVisibility(View.GONE);
+           modity();
+       });
+
+       button[2].setOnClickListener(v-> {
+           qrcode.setVisibility(View.GONE);
+           modify.setVisibility(View.GONE);
+           logs.setVisibility(View.VISIBLE);
+           button[3].setVisibility(View.GONE);
+       });
+
+       button[3].setOnClickListener(v -> {
+           try {
+               sendData(type,cn,fname,lname,address,contact,plate,gender,dob,age);
+           }catch (Exception e){
+
+           }
+       });
+    }
+
+
+    void modity(){
+
+        if(type.equals("Visitor/Supplier")){
+            category.check(R.id.rad1);
+        }else if(type.equals("Trucking")){
+            category.check(R.id.rad2);
+        }else if(type.equals("Employee")){
+            category.check(R.id.rad3);
+        }else if(type.equals("Agency")){
+            category.check(R.id.rad4);
+        }
+
+        if(vaccinated.equals("N")){
+            vaccine.check(R.id.no);
+        }
+        else{
+            vaccine.setClickable(false);
+            vaccine.check(R.id.yes);
+        }
+
+        if(gender.equals("MR")){
+            title.check(R.id.mr);
+        }
+        else{
+            title.check(R.id.mrs);
+        }
+    }
+
 
     public void openBluetoothPrinter() throws IOException {
         try {
@@ -215,7 +330,7 @@ public class Register extends AppCompatActivity {
             BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
             bluetoothAdapter = defaultAdapter;
             if (defaultAdapter == null) {
-               controller.toastip(R.raw.error_con,"No Bluetooth Adapter found");
+                controller.toastip(R.raw.error_con,"No Bluetooth Adapter found");
 
             }
             if (bluetoothAdapter.isEnabled()) {
@@ -237,9 +352,6 @@ public class Register extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-
-
 
     void sendData(String type,String company,String fname,String lname,String address,String contact,String plate,String gender,String dob,String age) throws IOException {
 
@@ -272,27 +384,13 @@ public class Register extends AppCompatActivity {
         return new SimpleDateFormat("dd/MM/yyyy").format(new Date());
     }
 
-
-    //optional
-    void closeBT() throws IOException {
-        try {
-            stopWorker = true;
-            outputStream.close();
-            inputStream.close();
-            bluetoothSocket.close();
-           controller.toastip(R.raw.error_con,"Bluetooth Closed");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     protected void save(){
         try {
             saved.setOnClickListener(view -> {
 
 
 
-                if(rgroup.getCheckedRadioButtonId() == -1){
+                if(category.getCheckedRadioButtonId() == -1){
                     function.getInstance(view.getContext()).toastip(R.raw.error_con,"Please Select Category");
                 }
 
@@ -313,7 +411,7 @@ public class Register extends AppCompatActivity {
                     RadioButton _vaccined = findViewById(getVaccine);
                     vaccinated = _vaccined.getText().toString();
 
-                    int selectedID = rgroup.getCheckedRadioButtonId();
+                    int selectedID = category.getCheckedRadioButtonId();
                     if(selectedID == R.id.rad1){
                         categpry = "Visitor/Supplier";
                     }else if(selectedID == R.id.rad2){
@@ -326,31 +424,31 @@ public class Register extends AppCompatActivity {
 
 
                     String _category = categpry;
-                    String _vaccine = vaccinated;
+                    String _vaccine = mvaccinated;
                     String _title = titled;
-                    String _dob = dob.getText().toString();
-                    String _age = age.getText().toString();
-                    String _fname = fname.getText().toString();
-                    String _lname = lname.getText().toString();
+                    String _dob = mdob.getText().toString();
+                    String _age = mage.getText().toString();
+                    String _fname = mfname.getText().toString();
+                    String _lname = mlname.getText().toString();
                     String _company = companySelectedorNot ? SpinnerSelectCompany[0].getText().toString() : SpinnerSelectCompany[1].getText().toString();
                     String _province = openProvince.getText().toString();
                     String _city = opencity.getText().toString();
                     String _brgy = openbarangay.getText().toString();
-                    String _contact = contact.getText().toString();
-                    String _plate = plateNo.getText().toString();
-                    String _img = Captured ?  getImg() : "";
+                    String _contact = mcontact.getText().toString();
+                    String _plate = mplateNo.getText().toString();
+                   // String _img = Captured ?  getImg() : "";
 
 
                     if(_dob.isEmpty()){
-                       dob.requestFocus();
-                       function.getInstance(view.getContext()).toastip(R.raw.error_con,"Invalid Date of Birth");
+                        mdob.requestFocus();
+                        function.getInstance(view.getContext()).toastip(R.raw.error_con,"Invalid Date of Birth");
                     }
                     else if(_fname.isEmpty()){
-                        fname.requestFocus();
+                        mfname.requestFocus();
                         function.getInstance(view.getContext()).toastip(R.raw.error_con,"Invalid First Name");
                     }
                     else if(_lname.isEmpty()){
-                        lname.requestFocus();
+                        mlname.requestFocus();
                         function.getInstance(view.getContext()).toastip(R.raw.error_con,"Invalid Last Name");
                     }
                     else if(_company.isEmpty()){
@@ -369,19 +467,19 @@ public class Register extends AppCompatActivity {
                         function.getInstance(view.getContext()).toastip(R.raw.error_con,"Selecct Barangay");
                     }
                     else if(_contact.isEmpty() || contact.length() <= 10){
-                        contact.requestFocus();
+                        mcontact.requestFocus();
                         function.getInstance(view.getContext()).toastip(R.raw.error_con,"Invalid Contact Number");
                     }
-                    else if(_img.isEmpty()){
-                        function.getInstance(view.getContext()).toastip(R.raw.error_con,"Please Capture valid ID");
-                        openCameraButtonclick();
-                    }
+//                    else if(_img.isEmpty()){
+//                        function.getInstance(view.getContext()).toastip(R.raw.error_con,"Please Capture valid ID");
+//                        openCameraButtonclick();
+//                    }
                     else{
                         try {
                             FindBluetoothDevice();
                             openBluetoothPrinter();
-                            register(_category,_company,"",_plate,_fname,_lname,_title,_dob,_age,_province + " " + _city + " " + _brgy,_contact,controller.getAD(),_province,_city,_brgy,_img,controller.getAREACODE(),_vaccine);
-                            sendData(_category,_company,_fname,_lname, _province + " " + _city + " " + _brgy,_contact,_plate,_title,_dob,_age);
+                            register(id,_category,_company,"",_plate,_fname,_lname,_title,_dob,_age,_province + " " + _city + " " + _brgy,_contact,controller.getAD(),_province,_city,_brgy,_vaccine);
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -401,16 +499,25 @@ public class Register extends AppCompatActivity {
     }
 
 
-    private void register(String type,String cn,String empid,String plate,String name,
+    private void register(String sid,String type,String cn,String empid,String plate,String name,
                           String lname,String gender,String dob,String age,String address,
-                          String contact,String AD,String pro,String mun, String brgy, String img,
-                          String plantcode,String vaccine){
+                          String contact,String AD,String pro,String mun, String brgy,String vaccine){
         Response.Listener<String> response = response1 -> {
             try {
                 JSONObject jsonResponse = new JSONObject(response1);
                 boolean success = jsonResponse.getBoolean("success");
                 if(success){
-                    controller.toastip(R.raw.ok,"Register Successfully");
+                    controller.toastip(R.raw.ok,"Updated Successfully");
+                    sendData(type,cn,name,lname, pro + " " + mun + " " + brgy,contact,plate,gender,dob,age);
+
+                    header[0].setText("Title : " + gender);
+                    header[1].setText("Name : " + name + " " + lname);
+                    header[2].setText("Contact : " + contact);
+                    header[3].setText("Address : " + pro + " " + mun + " " + brgy);
+                    header[4].setText("Date of Birth : " + dob);
+                    header[5].setText("Age : " + age);
+                    header[6].setText("Company : " + cn);
+                    header[7].setText("Plate No. : " + plate);
                 }
                 else{
                     controller.toastip(R.raw.error_con,"something went wrong. Please Try Again Later.");
@@ -418,23 +525,25 @@ public class Register extends AppCompatActivity {
 
             } catch (JSONException e) {
                 e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         };
         Response.ErrorListener errorListener = error -> {
 
         };
-        con_register get = new con_register(type,cn,empid,plate,name,lname,gender,dob,age,address,contact,AD,pro,mun,brgy,img,plantcode,vaccine
+        con_updateregister get = new con_updateregister(sid,type,cn,empid,plate,name,lname,gender,dob,age,address,contact,AD,pro,mun,brgy,vaccine
                 ,response,errorListener);
-        RequestQueue queue = Volley.newRequestQueue(Register.this);
+        RequestQueue queue = Volley.newRequestQueue(Details.this);
         queue.add(get);
     }
 
 
 
     public String getImg(){
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
-      return Base64.encodeToString(byteArrayOutputStream.toByteArray(), 0);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+        return Base64.encodeToString(byteArrayOutputStream.toByteArray(), 0);
     }
 
 
@@ -444,7 +553,7 @@ public class Register extends AppCompatActivity {
         try {
             File imageFile = File.createTempFile(fileName,".jpg",storageDirectory);
             currentPhotoPath = imageFile.getAbsolutePath();
-            Uri imageUri = FileProvider.getUriForFile(Register.this,"com.example.contacttracingapp.fileprovider",imageFile);
+            Uri imageUri = FileProvider.getUriForFile(Details.this,"com.example.contacttracingapp.fileprovider",imageFile);
 
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
@@ -572,7 +681,7 @@ public class Register extends AppCompatActivity {
                 Response.ErrorListener errorListener = error -> {
                     loading.setVisibility(View.VISIBLE);
                 };
-                city get = new city(ID,response,errorListener);
+                com.example.contacttracingapp.config.city get = new city(ID,response,errorListener);
                 RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
                 queue.add(get);
 
@@ -657,7 +766,7 @@ public class Register extends AppCompatActivity {
                 Response.ErrorListener errorListener = error -> {
                     loading.setVisibility(View.VISIBLE);
                 };
-                brgy get = new brgy(ID,response,errorListener);
+                com.example.contacttracingapp.config.brgy get = new brgy(ID,response,errorListener);
                 RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
                 queue.add(get);
 
@@ -875,11 +984,11 @@ public class Register extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     protected void ViewDob(){
-        dob.setOnTouchListener((v, event) -> {
+        mdob.setOnTouchListener((v, event) -> {
 //                0 left, 1 top, 2 right, 3 bttom;
             final int DRAWABLE_RIGHT = 2;
             if(event.getAction() == MotionEvent.ACTION_UP) {
-                if(event.getRawX() >= (dob.getRight() - dob.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                if(event.getRawX() >= (mdob.getRight() - mdob.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                     new DatePickerDialog(v.getContext(),R.style.picker,getDateto(), calendar
                             .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                             calendar.get(Calendar.DAY_OF_MONTH)).show();
@@ -891,7 +1000,7 @@ public class Register extends AppCompatActivity {
 
 
         /**Ontextchanged**/
-        dob.addTextChangedListener(new TextWatcher() {
+        mdob.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -913,7 +1022,7 @@ public class Register extends AppCompatActivity {
 
                     if (clean.length() < 8){
                         clean = clean + ddmmyyyy.substring(clean.length());
-                        age.setText("");
+                        mage.setText("");
                     }else{
                         //This part makes sure that when we finish entering numbers
                         //the date is correct, fixing it otherwise
@@ -939,9 +1048,9 @@ public class Register extends AppCompatActivity {
 
                     sel = sel < 0 ? 0 : sel;
                     current = clean;
-                    dob.setText(current);
-                    dob.setSelection(sel < current.length() ? sel : current.length());
-                    String[] getDOB = dob.getText().toString().split("/");
+                    mdob.setText(current);
+                    mdob.setSelection(sel < current.length() ? sel : current.length());
+                    String[] getDOB = mdob.getText().toString().split("/");
 
                     if(getDOB[2].length() >= 4){
                         if (getDOB[2].matches("[0-9]+")) {
@@ -961,23 +1070,9 @@ public class Register extends AppCompatActivity {
     }
 
     protected void setAge(int year, int month, int day){
-//        Calendar dob = Calendar.getInstance();
-//        Calendar today = Calendar.getInstance();
-//
-//        dob.set(year, month, day);
-//
-//        int setage = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
-//
-//        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
-//            setage--;
-//        }
-//
-//        Integer ageInt = new Integer(setage);
-//        String ageS = ageInt.toString();
-//        age.setText(ageS);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            age.setText(String.valueOf(Period.between(LocalDate.of(year, month, day),LocalDate.now()).getYears()));
+            mage.setText(String.valueOf(Period.between(LocalDate.of(year, month, day),LocalDate.now()).getYears()));
         }
 
     }
@@ -995,12 +1090,7 @@ public class Register extends AppCompatActivity {
     private void Formatter() {
         String myFormat = "dd/MM/yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        dob.setText(sdf.format(calendar.getTime()));
-
-//        String FilterFormat = "yyyy-M-d";
-//        SimpleDateFormat sdffilter = new SimpleDateFormat(FilterFormat, Locale.US);
-//        function.toast(getActivity(),sdffilter.format(myCalendar.getTime()));
-//        stc_date_to = sdffilter.format(myCalendar.getTime());
+        mdob.setText(sdf.format(calendar.getTime()));
     }
 
 
@@ -1014,9 +1104,10 @@ public class Register extends AppCompatActivity {
 //                    function.getInstance(getApplicationContext()).toastip(R.raw.ok,"Visitor/Supplier");
                     SpinnerSelectCompany[0].setVisibility(View.GONE);
                     SpinnerSelectCompany[1].setVisibility(View.VISIBLE);
+                    SpinnerSelectCompany[1].setText(cn);
                     SpinnerSelectCompany[1].setText("");
                     SpinnerSelectCompany[1].setEnabled(true);
-                    plateNo.setHint("Required");
+                    mplateNo.setHint("Required");
                     requiredPlate = true;
                     companySelectedorNot = false;
                     break;
@@ -1026,18 +1117,19 @@ public class Register extends AppCompatActivity {
 //                    function.getInstance(getApplicationContext()).toastip(R.raw.ok,"Trucking");
                     SpinnerSelectCompany[1].setVisibility(View.GONE);
                     SpinnerSelectCompany[0].setVisibility(View.VISIBLE);
-                    plateNo.setHint("Required");
+                    SpinnerSelectCompany[0].setText(cn);
+                    mplateNo.setHint("Required");
                     requiredPlate = true;
                     companySelectedorNot = true;
                     break;
                 case R.id.rad3:
 //                    function.getInstance(getApplicationContext()).toastip(R.raw.ok,"CPF Employee");
                     SpinnerSelectCompany[1].setText("CHAROEN POKPHAND FOODS PHILIPPINES");
-
                     SpinnerSelectCompany[1].setEnabled(false);
                     SpinnerSelectCompany[0].setVisibility(View.GONE);
                     SpinnerSelectCompany[1].setVisibility(View.VISIBLE);
-                    plateNo.setHint("Optional");
+                    SpinnerSelectCompany[1].setText("CHAROEN POKPHAND FOODS PHILIPPINES");
+                    mplateNo.setHint("Optional");
                     companySelectedorNot = false;
                     requiredPlate = false;
                     break;
@@ -1047,7 +1139,8 @@ public class Register extends AppCompatActivity {
 //                    function.getInstance(getApplicationContext()).toastip(R.raw.ok,"Agency");
                     SpinnerSelectCompany[1].setVisibility(View.GONE);
                     SpinnerSelectCompany[0].setVisibility(View.VISIBLE);
-                    plateNo.setHint("Optional");
+                    SpinnerSelectCompany[0].setText(cn);
+                    mplateNo.setHint("Optional");
                     requiredPlate = false;
                     companySelectedorNot = true;
                     break;
@@ -1058,12 +1151,12 @@ public class Register extends AppCompatActivity {
     protected void OpenCameraModal(){
         openCamera.setOnClickListener(v -> {
 
-                String fileName = "Photo";
-                File storageDirectory = getExternalFilesDir((Environment.DIRECTORY_PICTURES));
+            String fileName = "Photo";
+            File storageDirectory = getExternalFilesDir((Environment.DIRECTORY_PICTURES));
             try {
                 File imageFile = File.createTempFile(fileName,".jpg",storageDirectory);
                 currentPhotoPath = imageFile.getAbsolutePath();
-                Uri imageUri = FileProvider.getUriForFile(Register.this,"com.example.contacttracingapp.fileprovider",imageFile);
+                Uri imageUri = FileProvider.getUriForFile(Details.this,"com.example.contacttracingapp.fileprovider",imageFile);
 
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
@@ -1084,23 +1177,32 @@ public class Register extends AppCompatActivity {
 
         if(requestCode == 1 && resultCode == RESULT_OK){
             bitmap = BitmapFactory.decodeFile(currentPhotoPath);
-            imageOutput.setImageBitmap(bitmap);
-            Captured = true;
+            himg.setImageBitmap(bitmap);
+
+            String img = getImg();
+            Response.Listener<String> response = response1 -> {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response1);
+                    boolean success = jsonResponse.getBoolean("success");
+                    if(success){
+                        controller.toastip(R.raw.ok,"Image Updated");
+                    }
+                    else{
+                        controller.toastip(R.raw.error_con,"something went wrong. Please Try Again Later.");
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            };
+            Response.ErrorListener errorListener = error -> {
+
+            };
+            con_imgUpdate get = new con_imgUpdate(id,img,response,errorListener);
+            RequestQueue queue = Volley.newRequestQueue(Details.this);
+            queue.add(get);
+
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-        try {
-            closeBT();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void back(View view) {
-        function.intent(Home.class,view.getContext());
-    }
 }
