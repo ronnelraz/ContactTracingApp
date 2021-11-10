@@ -18,11 +18,15 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -47,11 +51,13 @@ import com.example.contacttracingapp.config._appscantemp;
 import com.example.contacttracingapp.config._areas;
 import com.example.contacttracingapp.config.all_scanned;
 import com.example.contacttracingapp.config.vaccinated;
+import com.example.contacttracingapp.retroConfig.API;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -65,6 +71,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,6 +79,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class Home extends AppCompatActivity {
 
@@ -167,7 +176,7 @@ public class Home extends AppCompatActivity {
            @Override
            public void onTabSelected(TabLayout.Tab tab) {
                if(tab.getPosition() == 0){
-                   scanQrcode(getApplicationContext());
+                   scanQrcode();
                }
                else if(tab.getPosition() == 1){
                    function.intent(Register.class,Home.this);
@@ -239,16 +248,14 @@ public class Home extends AppCompatActivity {
     }
 
     protected void getallScanned(){
-        try {
-            list.clear();
-            Response.Listener<String> response = response1 -> {
+        list.clear();
+        API.getClient().ScannedPerson().enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
                 try {
-                    JSONObject jsonResponse = new JSONObject(response1);
+                    JSONObject jsonResponse = new JSONObject(new Gson().toJson(response.body()));
                     boolean success = jsonResponse.getBoolean("success");
                     JSONArray array = jsonResponse.getJSONArray("data");
-
-
-
                     if(success){
                         loading.setVisibility(View.GONE);
                         for (int i = 0; i < array.length(); i++) {
@@ -269,26 +276,21 @@ public class Home extends AppCompatActivity {
                         recyclerView.setAdapter(adapter);
                     }
 
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            };
-            Response.ErrorListener errorListener = error -> {
-                String result = function.getInstance(getApplicationContext()).Errorvolley(error);
-                function.getInstance(getApplicationContext()).toastip(R.raw.error_con,result);
-                loading.setVisibility(View.VISIBLE);
-                no_connection();
-            };
-            all_scanned get = new all_scanned(response,errorListener);
-            RequestQueue queue = Volley.newRequestQueue(Home.this);
-            get.setRetryPolicy(new DefaultRetryPolicy(
-                    0,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            queue.add(get);
-        } catch(Exception e){
-            System.out.println("error");
-        }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                if (t instanceof IOException) {
+                    function.getInstance(getApplicationContext()).toastip(R.raw.error_con,t.getMessage());
+                    loading.setVisibility(View.VISIBLE);
+                    no_connection();
+                }
+            }
+        });
 
     }
 
@@ -389,7 +391,7 @@ public class Home extends AppCompatActivity {
 
             switch (item.getItemId()){
                 case R.id.scan:
-                    scanQrcode(getApplicationContext());
+                    scanQrcode();
                     drawerLayout.closeDrawer(Gravity.LEFT,true);
                     break;
                 case R.id.register:
@@ -447,7 +449,7 @@ public class Home extends AppCompatActivity {
         }
     }
 
-    private void scanQrcode(Context context) {
+    public void scanQrcode() {
         Dexter.withActivity(this)
                 .withPermissions(
                         Manifest.permission.INTERNET,
@@ -483,35 +485,85 @@ public class Home extends AppCompatActivity {
                              if(data[0].equals("cpfp")){
                                  addlistQrcode(Arrays.asList(data[3],data[5],data[7],data[9],data[11],data[13],data[15],data[17],data[19],data[21],data[23]));
                                  if(data[1].equals("true")){
+                                     
+                                     
+                                     API.getClient().ScannedID(qrcodeData.get(6),function.getInstance(Home.this).getUserId()).enqueue(new Callback<Object>() {
 
-                                     Response.Listener<String> response = response1 -> {
-                                         try {
-                                             JSONObject jsonResponse = new JSONObject(response1);
-                                             boolean success = jsonResponse.getBoolean("success");
-                                             JSONArray array = jsonResponse.getJSONArray("data");
+                                         @Override
+                                         public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                                             try {
+                                                 JSONObject jsonResponse = new JSONObject(new Gson().toJson(response.body()));
+                                                 boolean success = jsonResponse.getBoolean("success");
+                                                 if(success){
+                                                     TextView textView = new TextView(Home.this);
+//
+                                                     textView.setText(new StringBuilder().append(jsonResponse.getString("name")).append(" has been Banned until " + jsonResponse.getString("end")).append("\n").append("Plate No : ").append(jsonResponse.getString("plate")).append("\nRemark : ").append(jsonResponse.getString("remark")).append("\n\nPlease do not allow this person go inside in the feedmill.").toString());
+                                                     textView.setTextSize(18);
+                                                     textView.setWidth(500);
+                                                     textView.setHeight(500);
+                                                     new SweetAlertDialog(Home.this, SweetAlertDialog.WARNING_TYPE)
+                                                             .setTitleText(jsonResponse.getString("ban_type"))
+                                                             .setCustomView(textView.getRootView())
+                                                             .setConfirmText("ok")
+                                                             .setCancelClickListener(null)
 
-                                             if(success){
-                                                 for (int i = 0; i < array.length(); i++) {
-                                                     JSONObject object = array.getJSONObject(i);
-                                                     open_modal_temperature(data[19],data[9],data[11],data[15],object.getString("vaccinated"));
-//                        function.getInstance(getApplicationContext()).toast(object.getString("vaccinated"));
+                                                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                                 @Override
+                                                                 public void onClick(SweetAlertDialog sDialog) {
+                                                                     sDialog.dismissWithAnimation();
+                                                                 }
+                                                             })
+                                                             .show();
 
                                                  }
+                                                 else{
+                                                     API.getClient().VACCINE(qrcodeData.get(6)).enqueue(new Callback<Object>() {
+                                                         @Override
+                                                         public void onResponse(Call<Object> callok, retrofit2.Response<Object> responseok) {
+                                                             try {
+                                                                 JSONObject jsonResponse = new JSONObject(new Gson().toJson(responseok.body()));
+                                                                 boolean success = jsonResponse.getBoolean("success");
+                                                                 JSONArray array = jsonResponse.getJSONArray("data");
+                                                                 if(success){
+                                                                     for (int i = 0; i < array.length(); i++) {
+                                                                         JSONObject object = array.getJSONObject(i);
+                                                                         open_modal_temperature(data[19],data[9],data[11],data[15],object.getString("vaccinated"));
+                                                                     }
+                                                                 }
 
+
+                                                             } catch (JSONException e) {
+                                                                 e.printStackTrace();
+                                                             }
+                                                         }
+
+                                                         @Override
+                                                         public void onFailure(Call<Object> callok, Throwable tt) {
+                                                             if (tt instanceof IOException) {
+                                                                 function.getInstance(Home.this).toastip(R.raw.error_con,tt.getMessage());
+                                                             }
+                                                         }
+                                                     });
+                                                    //end
+                                                 }
+
+
+                                             } catch (JSONException e) {
+                                                 e.printStackTrace();
                                              }
-                                         } catch (JSONException e) {
-                                             e.printStackTrace();
                                          }
-                                     };
-                                     Response.ErrorListener errorListener = error -> {
-                                         String results = function.getInstance(Home.this).Errorvolley(error);
-                                         function.getInstance(Home.this).toast(results);
-                                     };
-                                     vaccinated get = new vaccinated(qrcodeData.get(6),response,errorListener);
-                                     RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                                     queue.add(get);
 
-//                                     function.getInstance(getApplicationContext()).toast(qrcodeData.get(6));
+                                         @Override
+                                         public void onFailure(Call<Object> call, Throwable t) {
+                                             if (t instanceof IOException) {
+                                                 function.getInstance(Home.this).toastip(R.raw.error_con,t.getMessage());
+                                             }
+                                         }
+                                     });
+
+
+
+//
                                  }
                                  else{
                                      function.getInstance(getApplicationContext()).errorEffect();
@@ -590,33 +642,25 @@ public class Home extends AppCompatActivity {
         alert = dialog.create();
         saveScan.setOnClickListener(v -> {
             String Get_vaccinated = yes.isChecked() ? "Y" : "N";
-//            function.getInstance(getApplicationContext()).toast(data.get(6));
-//            Log.d("saveScanned",
-//                    data.get(3) + " " +data.get(4)+ " " +function.getInstance(Home.this).getUserId()+ " " +data.get(6)+ " " +temperature.getText().toString()+ " " +Get_vaccinated
-//                    );
-            Response.Listener<String> response = new Response.Listener<String>() {
+
+            API.getClient()._appscantemp(name,lname,function.getInstance(Home.this).getUserId(),contact,temperature.getText().toString(),Get_vaccinated).enqueue(new Callback<Object>() {
                 @Override
-                public void onResponse(String response) {
+                public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
                     try {
-                        JSONObject jsonResponse = new JSONObject(response);
-//                        function.getInstance(getApplicationContext()).toast(jsonResponse.getString("success"));
+                        JSONObject jsonResponse = new JSONObject(new Gson().toJson(response.body()));
                         boolean success = jsonResponse.getBoolean("success");
 
                         if(success){
                             alert.dismiss();
                             double temp = Double.parseDouble(temperature.getText().toString());
                             if(temp <= 30.0){
-
-//                                AlertDialog(R.drawable.low,"Low Temperature!","Low");
                                 function.getInstance(getApplicationContext()).toastip(R.raw.low,"Low Temperature!");
                             }
                             else if(temp >= 37.5){
                                 function.getInstance(getApplicationContext()).toastip(R.raw.high,"High Temperature!");
-//                                AlertDialog(R.drawable.warning,"High Temperature!","High");
                             }
                             else{
                                 function.getInstance(getApplicationContext()).toastip(R.raw.ok,"Normal Temperature!");
-//                                AlertDialog(R.drawable.passed,"Normal Temperature!","Normal");
                             }
                             getallScanned(); //reload after scanned and saved the record from the database
 
@@ -630,14 +674,54 @@ public class Home extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-            };
-            Response.ErrorListener errorListener = error -> {
-                String result = function.getInstance(Home.this).Errorvolley(error);
-                function.getInstance(Home.this).toastip(R.raw.error_con,result);
-            };
-            _appscantemp get = new _appscantemp(name,lname,function.getInstance(Home.this).getUserId(),contact,temperature.getText().toString(),Get_vaccinated,response,errorListener);
-            RequestQueue queue = Volley.newRequestQueue(this);
-            queue.add(get);
+
+                @Override
+                public void onFailure(Call<Object> call, Throwable t) {
+                    if (t instanceof IOException) {
+                        function.getInstance(Home.this).toastip(R.raw.error_con,t.getMessage());
+                    }
+                }
+            });
+
+//            Response.Listener<String> response = new Response.Listener<String>() {
+//                @Override
+//                public void onResponse(String response) {
+//                    try {
+//                        JSONObject jsonResponse = new JSONObject(response);
+//                        boolean success = jsonResponse.getBoolean("success");
+//
+//                        if(success){
+//                            alert.dismiss();
+//                            double temp = Double.parseDouble(temperature.getText().toString());
+//                            if(temp <= 30.0){
+//                                function.getInstance(getApplicationContext()).toastip(R.raw.low,"Low Temperature!");
+//                            }
+//                            else if(temp >= 37.5){
+//                                function.getInstance(getApplicationContext()).toastip(R.raw.high,"High Temperature!");
+//                            }
+//                            else{
+//                                function.getInstance(getApplicationContext()).toastip(R.raw.ok,"Normal Temperature!");
+//                            }
+//                            getallScanned(); //reload after scanned and saved the record from the database
+//
+//                        }
+//                        else{
+//                            saveScan.setEnabled(true);
+//                            function.getInstance(Home.this).toast("Error");
+//                        }
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            };
+//            Response.ErrorListener errorListener = error -> {
+//                String result = function.getInstance(Home.this).Errorvolley(error);
+//                function.getInstance(Home.this).toastip(R.raw.error_con,result);
+//            };
+//            _appscantemp get = new _appscantemp(name,lname,function.getInstance(Home.this).getUserId(),contact,temperature.getText().toString(),Get_vaccinated,response,errorListener);
+//            RequestQueue queue = Volley.newRequestQueue(this);
+//            queue.add(get);
             saveScan.setEnabled(false);
 
         });
@@ -711,5 +795,19 @@ public class Home extends AppCompatActivity {
     }
 
 
+    public void scan(View view) {
+        scanQrcode();
+    }
 
+    public void register(View view) {
+        function.intent(Register.class,Home.this);
+    }
+
+    public void search(View view) {
+        function.intent(Search.class,Home.this);
+    }
+
+    public void employee(View view) {
+        Toast.makeText(Home.this, "Not Available", Toast.LENGTH_SHORT).show();
+    }
 }

@@ -6,7 +6,6 @@ import androidx.core.content.ContextCompat;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,11 +20,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.example.contacttracingapp.Adapter.Adapter_area;
-import com.example.contacttracingapp.GetterSetter.gs_area;
-import com.example.contacttracingapp.config._areas;
 import com.example.contacttracingapp.config._login;
 import com.example.contacttracingapp.config.loginAreaLocation;
+import com.example.contacttracingapp.retroConfig.API;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +35,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -90,7 +90,8 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             function.getInstance(this).loading();
-            login(getUsername,getPassword,getCode,getName);
+//            login(getUsername,getPassword,getCode,getName);
+            re_login(getUsername,getPassword,getCode,getName);
         }
 
 
@@ -101,67 +102,164 @@ public class MainActivity extends AppCompatActivity {
     private void loadLocation(){
         list_location_name.clear();
         list_location_code.clear();
-        Response.Listener<String> response = response1 -> {
-            try {
-                JSONObject jsonResponse = new JSONObject(response1);
-                boolean success = jsonResponse.getBoolean("success");
-                JSONArray array = jsonResponse.getJSONArray("data");
+        API.getClient().AREAS().enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(new Gson().toJson(response.body()));
+                    boolean success = jsonResponse.getBoolean("success");
+                    JSONArray array = jsonResponse.getJSONArray("data");
 
+                    if(success){
+                        list_location_code.add("0");
+                        list_location_name.add("Select Location");
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject object = array.getJSONObject(i);
 
+                            list_location_code.add(object.getString("plant_code"));
+                            list_location_name.add(object.getString("plant_name"));
+                        }
 
-                if(success){
-                    list_location_code.add("0");
-                    list_location_name.add("Select Location");
-                    for (int i = 0; i < array.length(); i++) {
-                        JSONObject object = array.getJSONObject(i);
+                        locationAdapter = new ArrayAdapter<>(MainActivity.this,R.layout.spinner_area, list_location_name);
+                        location.setAdapter(locationAdapter);
 
-                        list_location_code.add(object.getString("plant_code"));
-                        list_location_name.add(object.getString("plant_name"));
+                        location.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                String code = list_location_code.get(position);
+                                String name = list_location_name.get(position);
+
+                                getPlant_code = code;
+                                getPlant_name = name;
+
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+
                     }
 
-
-                    locationAdapter = new ArrayAdapter<>(this,R.layout.spinner_area, list_location_name);
-                    location.setAdapter(locationAdapter);
-
-
-
-                    location.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            String code = list_location_code.get(position);
-                            String name = list_location_name.get(position);
-
-                            getPlant_code = code;
-                            getPlant_name = name;
-//                            function.getInstance(getApplicationContext()).toast(code);
-//                            function.getInstance(getApplicationContext()).toast(name);
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-
-                        }
-                    });
-
-
-
-
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
-        };
-        Response.ErrorListener errorListener = new com.android.volley.Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onFailure(Call<Object> call, Throwable t) {
 
             }
-        };
-        loginAreaLocation get = new loginAreaLocation(response,errorListener);
-        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-        queue.add(get);
+        });
 
+
+
+//        list_location_name.clear();
+//        list_location_code.clear();
+//        Response.Listener<String> response = response1 -> {
+//            try {
+//                JSONObject jsonResponse = new JSONObject(response1);
+//                boolean success = jsonResponse.getBoolean("success");
+//                JSONArray array = jsonResponse.getJSONArray("data");
+//
+//
+//
+//                if(success){
+//                    list_location_code.add("0");
+//                    list_location_name.add("Select Location");
+//                    for (int i = 0; i < array.length(); i++) {
+//                        JSONObject object = array.getJSONObject(i);
+//
+//                        list_location_code.add(object.getString("plant_code"));
+//                        list_location_name.add(object.getString("plant_name"));
+//                    }
+//
+//
+//                    locationAdapter = new ArrayAdapter<>(this,R.layout.spinner_area, list_location_name);
+//                    location.setAdapter(locationAdapter);
+//
+//
+//
+//                    location.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                        @Override
+//                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                            String code = list_location_code.get(position);
+//                            String name = list_location_name.get(position);
+//
+//                            getPlant_code = code;
+//                            getPlant_name = name;
+//
+//                        }
+//
+//                        @Override
+//                        public void onNothingSelected(AdapterView<?> parent) {
+//
+//                        }
+//                    });
+//
+//                }
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        };
+//        Response.ErrorListener errorListener = new com.android.volley.Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//            }
+//        };
+//        loginAreaLocation get = new loginAreaLocation(response,errorListener);
+//        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+//        get.setRetryPolicy(new DefaultRetryPolicy(
+//                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
+//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//        queue.add(get);
+
+    }
+
+
+    private void re_login(String username,String password,String Code,String name){
+        API.getClient().LOGIN(username,password).enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(new Gson().toJson(response.body()));
+                    boolean success = jsonResponse.getBoolean("success");
+                    JSONArray array = jsonResponse.getJSONArray("data");
+
+                    if(success){
+
+                        function.pDialog.dismissWithAnimation();
+                        function.intent(Home.class,MainActivity.this);
+
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject object = array.getJSONObject(i);
+                            String id = object.getString("ID");
+                            String fullname = object.getString("FULLNAME");
+                            String status = object.getString("STATUS");
+                            function.getInstance(getApplicationContext()).setAccount(Arrays.asList(id,fullname,"true",username));
+                            function.getInstance(getApplicationContext()).setSelectedAreas(name,Code);
+                        }
+
+                    }
+                    else{
+                        function.pDialog.dismissWithAnimation();
+                        Toast.makeText(getApplicationContext(),"Invalid Username and Password!",Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+
+            }
+        });
     }
 
     private void login(String getusername,String getpassword,String Code,String name){
@@ -208,11 +306,11 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         _login get = new _login(getusername,getpassword,response,errorListener);
+        RequestQueue queue = Volley.newRequestQueue(this);
         get.setRetryPolicy(new DefaultRetryPolicy(
-                20000,
+                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(get);
     }
 

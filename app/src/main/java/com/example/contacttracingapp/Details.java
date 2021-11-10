@@ -234,9 +234,10 @@ public class Details extends AppCompatActivity {
         }
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        FindBluetoothDevice();
+
         save();
         try {
+            FindBluetoothDevice();
             openBluetoothPrinter();
         } catch (IOException e) {
             e.printStackTrace();

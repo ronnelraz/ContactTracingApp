@@ -25,17 +25,22 @@ import com.example.contacttracingapp.GetterSetter.gs_allRegistered;
 import com.example.contacttracingapp.GetterSetter.gs_scanned_all;
 import com.example.contacttracingapp.config.all_registered;
 import com.example.contacttracingapp.config.all_scanned;
+import com.example.contacttracingapp.retroConfig.API;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class Search extends AppCompatActivity {
 
@@ -121,59 +126,118 @@ public class Search extends AppCompatActivity {
     protected void AllData(){
         try {
             list.clear();
-            Response.Listener<String> response = response1 -> {
-                try {
-                    JSONObject jsonResponse = new JSONObject(response1);
-                    boolean success = jsonResponse.getBoolean("success");
-                    JSONArray array = jsonResponse.getJSONArray("data");
+            API.getClient().all_registered().enqueue(new Callback<Object>() {
+                @Override
+                public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                    try {
+
+                        JSONObject jsonResponse = new JSONObject(new Gson().toJson(response.body()));
+                        boolean success = jsonResponse.getBoolean("success");
+                        JSONArray array = jsonResponse.getJSONArray("data");
 
 
 
-                    if(success){
-                        loading.setVisibility(View.GONE);
-                        for (int i = 0; i < array.length(); i++) {
-                            JSONObject object = array.getJSONObject(i);
+                        if(success){
+                            loading.setVisibility(View.GONE);
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject object = array.getJSONObject(i);
 
-                            gs_allRegistered item = new gs_allRegistered(
-                                    object.getString("type"),
-                                    object.getString("company_name"),
-                                    object.getString("plate_number"),
-                                    object.getString("name"),
-                                    object.getString("gender"),
-                                    object.getString("dob"),
-                                    object.getString("age"),
-                                    object.getString("address"),
-                                    object.getString("contact_no"),
-                                    object.getString("lname"),
-                                    object.getString("fname"),
-                                    object.getString("img"),
-                                    object.getString("id"),
-                                    object.getString("province"),
-                                    object.getString("city"),
-                                    object.getString("brgy"),
-                                    object.getString("vaccinated")
-                            );
+                                gs_allRegistered item = new gs_allRegistered(
+                                        object.getString("type"),
+                                        object.getString("company_name"),
+                                        object.getString("plate_number"),
+                                        object.getString("name"),
+                                        object.getString("gender"),
+                                        object.getString("dob"),
+                                        object.getString("age"),
+                                        object.getString("address"),
+                                        object.getString("contact_no"),
+                                        object.getString("lname"),
+                                        object.getString("fname"),
+                                        object.getString("img"),
+                                        object.getString("id"),
+                                        object.getString("province"),
+                                        object.getString("city"),
+                                        object.getString("brgy"),
+                                        object.getString("vaccinated")
+                                );
 
-                            list.add(item);
+                                list.add(item);
+                            }
+
+                            adapter = new Adapter_Search(list,getApplicationContext());
+                            recyclerView.setAdapter(adapter);
                         }
 
-                        adapter = new Adapter_Search(list,getApplicationContext());
-                        recyclerView.setAdapter(adapter);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-            };
-            Response.ErrorListener errorListener = error -> {
-                String result = function.getInstance(getApplicationContext()).Errorvolley(error);
-                function.getInstance(getApplicationContext()).toastip(R.raw.error_con,result);
-                loading.setVisibility(View.VISIBLE);
-                no_connection();
-            };
-            all_registered get = new all_registered(response,errorListener);
-            RequestQueue queue = Volley.newRequestQueue(Search.this);
-            queue.add(get);
+
+                @Override
+                public void onFailure(Call<Object> call, Throwable t) {
+                    if (t instanceof IOException) {
+                        function.getInstance(getApplicationContext()).toastip(R.raw.error_con,t.getMessage());
+                        loading.setVisibility(View.VISIBLE);
+                        no_connection();
+                    }
+                }
+            });
+
+//            Response.Listener<String> response = response1 -> {
+//                try {
+//
+//                    JSONObject jsonResponse = new JSONObject(response1);
+//                    boolean success = jsonResponse.getBoolean("success");
+//                    JSONArray array = jsonResponse.getJSONArray("data");
+//
+//
+//
+//                    if(success){
+//                        loading.setVisibility(View.GONE);
+//                        for (int i = 0; i < array.length(); i++) {
+//                            JSONObject object = array.getJSONObject(i);
+//
+//                            gs_allRegistered item = new gs_allRegistered(
+//                                    object.getString("type"),
+//                                    object.getString("company_name"),
+//                                    object.getString("plate_number"),
+//                                    object.getString("name"),
+//                                    object.getString("gender"),
+//                                    object.getString("dob"),
+//                                    object.getString("age"),
+//                                    object.getString("address"),
+//                                    object.getString("contact_no"),
+//                                    object.getString("lname"),
+//                                    object.getString("fname"),
+//                                    object.getString("img"),
+//                                    object.getString("id"),
+//                                    object.getString("province"),
+//                                    object.getString("city"),
+//                                    object.getString("brgy"),
+//                                    object.getString("vaccinated")
+//                            );
+//
+//                            list.add(item);
+//                        }
+//
+//                        adapter = new Adapter_Search(list,getApplicationContext());
+//                        recyclerView.setAdapter(adapter);
+//                    }
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            };
+//            Response.ErrorListener errorListener = error -> {
+//                String result = function.getInstance(getApplicationContext()).Errorvolley(error);
+//                function.getInstance(getApplicationContext()).toastip(R.raw.error_con,result);
+//                loading.setVisibility(View.VISIBLE);
+//                no_connection();
+//            };
+//            all_registered get = new all_registered(response,errorListener);
+//            RequestQueue queue = Volley.newRequestQueue(Search.this);
+//            queue.add(get);
         } catch(Exception e){
             System.out.println("error");
         }

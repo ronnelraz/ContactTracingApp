@@ -149,7 +149,6 @@ public class function {
         msg.setText(body);
         toast.setGravity(Gravity.TOP|Gravity.RIGHT, 50, 50);
         toast.setDuration(Toast.LENGTH_LONG);
-        toast.setText("System Notification");
         toast.setView(vs);
         toast.show();
     }

@@ -56,7 +56,9 @@ import com.example.contacttracingapp.config.con_register;
 import com.example.contacttracingapp.config.loginAreaLocation;
 import com.example.contacttracingapp.config.province;
 import com.example.contacttracingapp.config.trucking;
+import com.example.contacttracingapp.retroConfig.API;
 import com.google.android.material.button.MaterialButton;
+import com.google.gson.Gson;
 
 
 import org.json.JSONArray;
@@ -84,7 +86,8 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
-
+import retrofit2.Call;
+import retrofit2.Callback;
 
 
 public class Register extends AppCompatActivity {
@@ -186,8 +189,8 @@ public class Register extends AppCompatActivity {
         });
         save();
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-       FindBluetoothDevice();
         try {
+            FindBluetoothDevice();
             openBluetoothPrinter();
         } catch (IOException e) {
             e.printStackTrace();
@@ -378,8 +381,8 @@ public class Register extends AppCompatActivity {
                     }
                     else{
                         try {
-                            FindBluetoothDevice();
-                            openBluetoothPrinter();
+//                            FindBluetoothDevice();
+//                            openBluetoothPrinter();
                             register(_category,_company,"",_plate,_fname,_lname,_title,_dob,_age,_province + " " + _city + " " + _brgy,_contact,controller.getAD(),_province,_city,_brgy,_img,controller.getAREACODE(),_vaccine);
                             sendData(_category,_company,_fname,_lname, _province + " " + _city + " " + _brgy,_contact,_plate,_title,_dob,_age);
                         } catch (IOException e) {
@@ -405,28 +408,59 @@ public class Register extends AppCompatActivity {
                           String lname,String gender,String dob,String age,String address,
                           String contact,String AD,String pro,String mun, String brgy, String img,
                           String plantcode,String vaccine){
-        Response.Listener<String> response = response1 -> {
-            try {
-                JSONObject jsonResponse = new JSONObject(response1);
-                boolean success = jsonResponse.getBoolean("success");
-                if(success){
-                    controller.toastip(R.raw.ok,"Register Successfully");
-                }
-                else{
-                    controller.toastip(R.raw.error_con,"something went wrong. Please Try Again Later.");
-                }
+    try{
+        API.getClient().con_register(type,cn,empid,plate,name,lname,gender,dob,age,address,contact,AD,pro,mun,brgy,img,plantcode,vaccine).enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(new Gson().toJson(response.body()));
+                    boolean success = jsonResponse.getBoolean("success");
+                    if(success){
+                        controller.toastip(R.raw.ok,"Register Successfully");
+                    }
+                    else{
+                        controller.toastip(R.raw.error_con,"something went wrong. Please Try Again Later.");
+                    }
 
-            } catch (JSONException e) {
-                e.printStackTrace();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-        };
-        Response.ErrorListener errorListener = error -> {
 
-        };
-        con_register get = new con_register(type,cn,empid,plate,name,lname,gender,dob,age,address,contact,AD,pro,mun,brgy,img,plantcode,vaccine
-                ,response,errorListener);
-        RequestQueue queue = Volley.newRequestQueue(Register.this);
-        queue.add(get);
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                if (t instanceof IOException) {
+                    function.getInstance(getApplicationContext()).toastip(R.raw.error_con,t.getMessage());
+                }
+            }
+        });
+
+    }catch (Exception e){
+
+    }
+//        Response.Listener<String> response = response1 -> {
+//            try {
+//                JSONObject jsonResponse = new JSONObject(response1);
+//                boolean success = jsonResponse.getBoolean("success");
+//                if(success){
+//                    controller.toastip(R.raw.ok,"Register Successfully");
+//                }
+//                else{
+//                    controller.toastip(R.raw.error_con,"something went wrong. Please Try Again Later.");
+//                }
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        };
+//        Response.ErrorListener errorListener = error -> {
+//
+//        };
+//        con_register get = new con_register(type,cn,empid,plate,name,lname,gender,dob,age,address,contact,AD,pro,mun,brgy,img,plantcode,vaccine
+//                ,response,errorListener);
+//        RequestQueue queue = Volley.newRequestQueue(Register.this);
+//        queue.add(get);
     }
 
 
@@ -463,37 +497,76 @@ public class Register extends AppCompatActivity {
         try{
             openProvince.setOnClickListener(view -> {
                 list_province_name.clear();
-                Response.Listener<String> response = response1 -> {
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response1);
-                        boolean success = jsonResponse.getBoolean("success");
-                        JSONArray array = jsonResponse.getJSONArray("data");
+
+                API.getClient().province().enqueue(new Callback<Object>() {
+                    @Override
+                    public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(new Gson().toJson(response.body()));
+                            boolean success = jsonResponse.getBoolean("success");
+                            JSONArray array = jsonResponse.getJSONArray("data");
 
 
 
-                        if(success){
-                            loading.setVisibility(View.GONE);
-                            for (int i = 0; i < array.length(); i++) {
-                                JSONObject object = array.getJSONObject(i);
-                                list_province_name.add(object.getString("name") + "-" +object.getString("subid"));
+                            if(success){
+                                loading.setVisibility(View.GONE);
+                                for (int i = 0; i < array.length(); i++) {
+                                    JSONObject object = array.getJSONObject(i);
+                                    list_province_name.add(object.getString("name") + "-" +object.getString("subid"));
+
+                                }
+
+                                adapter_province = new ArrayAdapter(view.getContext(), android.R.layout.simple_list_item_1,list_province_name);
+                                trucklist.setAdapter(adapter_province);
 
                             }
 
-                            adapter_province = new ArrayAdapter(view.getContext(), android.R.layout.simple_list_item_1,list_province_name);
-                            trucklist.setAdapter(adapter_province);
-
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-                };
-                Response.ErrorListener errorListener = error -> {
-                    loading.setVisibility(View.VISIBLE);
-                };
-                province get = new province(response,errorListener);
-                RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                queue.add(get);
+
+                    @Override
+                    public void onFailure(Call<Object> call, Throwable t) {
+                        if (t instanceof IOException) {
+                            loading.setVisibility(View.VISIBLE);
+                            function.getInstance(Register.this).toastip(R.raw.error_con,t.getMessage());
+                        }
+                    }
+                });
+
+
+//                Response.Listener<String> response = response1 -> {
+//                    try {
+//                        JSONObject jsonResponse = new JSONObject(response1);
+//                        boolean success = jsonResponse.getBoolean("success");
+//                        JSONArray array = jsonResponse.getJSONArray("data");
+//
+//
+//
+//                        if(success){
+//                            loading.setVisibility(View.GONE);
+//                            for (int i = 0; i < array.length(); i++) {
+//                                JSONObject object = array.getJSONObject(i);
+//                                list_province_name.add(object.getString("name") + "-" +object.getString("subid"));
+//
+//                            }
+//
+//                            adapter_province = new ArrayAdapter(view.getContext(), android.R.layout.simple_list_item_1,list_province_name);
+//                            trucklist.setAdapter(adapter_province);
+//
+//                        }
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                };
+//                Response.ErrorListener errorListener = error -> {
+//                    loading.setVisibility(View.VISIBLE);
+//                };
+//                province get = new province(response,errorListener);
+//                RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+//                queue.add(get);
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(view.getContext());
                 View vs = LayoutInflater.from(view.getContext()).inflate(R.layout.custom_company, null);
@@ -546,9 +619,11 @@ public class Register extends AppCompatActivity {
         try{
             opencity.setOnClickListener(view -> {
                 list_city_name.clear();
-                Response.Listener<String> response = response1 -> {
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response1);
+                API.getClient().city(ID).enqueue(new Callback<Object>() {
+                    @Override
+                    public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                        try {
+                        JSONObject jsonResponse = new JSONObject(new Gson().toJson(response.body()));
                         boolean success = jsonResponse.getBoolean("success");
                         JSONArray array = jsonResponse.getJSONArray("data");
 
@@ -568,13 +643,46 @@ public class Register extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                };
-                Response.ErrorListener errorListener = error -> {
-                    loading.setVisibility(View.VISIBLE);
-                };
-                city get = new city(ID,response,errorListener);
-                RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                queue.add(get);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Object> call, Throwable t) {
+                        if (t instanceof IOException) {
+                            function.getInstance(getApplicationContext()).toastip(R.raw.error_con,t.getMessage());
+                        }
+                    }
+                });
+
+//
+//                Response.Listener<String> response = response1 -> {
+//                    try {
+//                        JSONObject jsonResponse = new JSONObject(response1);
+//                        boolean success = jsonResponse.getBoolean("success");
+//                        JSONArray array = jsonResponse.getJSONArray("data");
+//
+//                        if(success){
+//                            loading.setVisibility(View.GONE);
+//                            for (int i = 0; i < array.length(); i++) {
+//                                JSONObject object = array.getJSONObject(i);
+//                                list_city_name.add(object.getString("name") + "-" +object.getString("subid"));
+//
+//                            }
+//
+//                            adapter_city = new ArrayAdapter(view.getContext(), android.R.layout.simple_list_item_1,list_city_name);
+//                            trucklist.setAdapter(adapter_city);
+//
+//                        }
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                };
+//                Response.ErrorListener errorListener = error -> {
+//                    loading.setVisibility(View.VISIBLE);
+//                };
+//                city get = new city(ID,response,errorListener);
+//                RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+//                queue.add(get);
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(view.getContext());
                 View vs = LayoutInflater.from(view.getContext()).inflate(R.layout.custom_company, null);
@@ -631,9 +739,12 @@ public class Register extends AppCompatActivity {
         try{
             openbarangay.setOnClickListener(view -> {
                 list_barangay_name.clear();
-                Response.Listener<String> response = response1 -> {
-                    try {
-                        JSONObject jsonResponse = new JSONObject(response1);
+
+                API.getClient().brgy(ID).enqueue(new Callback<Object>() {
+                    @Override
+                    public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                        try {
+                        JSONObject jsonResponse = new JSONObject(new Gson().toJson(response.body()));
                         boolean success = jsonResponse.getBoolean("success");
                         JSONArray array = jsonResponse.getJSONArray("data");
 
@@ -653,13 +764,46 @@ public class Register extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                };
-                Response.ErrorListener errorListener = error -> {
-                    loading.setVisibility(View.VISIBLE);
-                };
-                brgy get = new brgy(ID,response,errorListener);
-                RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                queue.add(get);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Object> call, Throwable t) {
+                        if (t instanceof IOException) {
+                            function.getInstance(getApplicationContext()).toastip(R.raw.error_con,t.getMessage());
+                        }
+                    }
+                });
+
+
+//                Response.Listener<String> response = response1 -> {
+//                    try {
+//                        JSONObject jsonResponse = new JSONObject(response1);
+//                        boolean success = jsonResponse.getBoolean("success");
+//                        JSONArray array = jsonResponse.getJSONArray("data");
+//
+//                        if(success){
+//                            loading.setVisibility(View.GONE);
+//                            for (int i = 0; i < array.length(); i++) {
+//                                JSONObject object = array.getJSONObject(i);
+//                                list_barangay_name.add(object.getString("name") + "-" +object.getString("subid"));
+//
+//                            }
+//
+//                            adapter_barangay = new ArrayAdapter(view.getContext(), android.R.layout.simple_list_item_1,list_barangay_name);
+//                            trucklist.setAdapter(adapter_barangay);
+//
+//                        }
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                };
+//                Response.ErrorListener errorListener = error -> {
+//                    loading.setVisibility(View.VISIBLE);
+//                };
+//                brgy get = new brgy(ID,response,errorListener);
+//                RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+//                queue.add(get);
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(view.getContext());
                 View vs = LayoutInflater.from(view.getContext()).inflate(R.layout.custom_company, null);
@@ -712,39 +856,71 @@ public class Register extends AppCompatActivity {
                 list_trucking.clear();
 
                 if(types.equals("Truck")){
-                    Response.Listener<String> response = response1 -> {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response1);
-                            boolean success = jsonResponse.getBoolean("success");
-                            JSONArray array = jsonResponse.getJSONArray("data");
+
+                    API.getClient().trucking().enqueue(new Callback<Object>() {
+                        @Override
+                        public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                            try {
+                                JSONObject jsonResponse = new JSONObject(new Gson().toJson(response.body()));
+                                boolean success = jsonResponse.getBoolean("success");
+                                JSONArray array = jsonResponse.getJSONArray("data");
 
 
 
-                            if(success){
-                                loading.setVisibility(View.GONE);
-                                for (int i = 0; i < array.length(); i++) {
-                                    JSONObject object = array.getJSONObject(i);
-//                            gs_trucking item = new gs_trucking(object.getString("AGENCY"));
-//                            list_trucking.add(item);
-                                    list_trucking.add(object.getString("AGENCY"));
+                                if(success){
+                                    loading.setVisibility(View.GONE);
+                                    for (int i = 0; i < array.length(); i++) {
+                                        JSONObject object = array.getJSONObject(i);
+                                        list_trucking.add(object.getString("AGENCY"));
 
+                                    }
+                                    adapter = new ArrayAdapter(view.getContext(), android.R.layout.simple_list_item_1,list_trucking);
+                                    trucklist.setAdapter(adapter);
                                 }
-                                adapter = new ArrayAdapter(view.getContext(), android.R.layout.simple_list_item_1,list_trucking);
-                                trucklist.setAdapter(adapter);
-//                        adapter = new adapter_trucking(this,list_trucking);
-//                        trucklist.setAdapter(adapter);
-                            }
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    };
-                    Response.ErrorListener errorListener = error -> {
-                        loading.setVisibility(View.VISIBLE);
-                    };
-                    trucking get = new trucking(response,errorListener);
-                    RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                    queue.add(get);
+
+                        @Override
+                        public void onFailure(Call<Object> call, Throwable t) {
+                            if (t instanceof IOException) {
+                                loading.setVisibility(View.VISIBLE);
+                                function.getInstance(getApplicationContext()).toastip(R.raw.error_con,t.getMessage());
+                            }
+                        }
+                    });
+
+//                    Response.Listener<String> response = response1 -> {
+//                        try {
+//                            JSONObject jsonResponse = new JSONObject(response1);
+//                            boolean success = jsonResponse.getBoolean("success");
+//                            JSONArray array = jsonResponse.getJSONArray("data");
+//
+//
+//
+//                            if(success){
+//                                loading.setVisibility(View.GONE);
+//                                for (int i = 0; i < array.length(); i++) {
+//                                    JSONObject object = array.getJSONObject(i);
+//                                    list_trucking.add(object.getString("AGENCY"));
+//
+//                                }
+//                                adapter = new ArrayAdapter(view.getContext(), android.R.layout.simple_list_item_1,list_trucking);
+//                                trucklist.setAdapter(adapter);
+//                            }
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    };
+//                    Response.ErrorListener errorListener = error -> {
+//                        loading.setVisibility(View.VISIBLE);
+//                    };
+//                    trucking get = new trucking(response,errorListener);
+//                    RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+//                    queue.add(get);
 
                     AlertDialog.Builder dialog = new AlertDialog.Builder(view.getContext());
                     View vs = LayoutInflater.from(view.getContext()).inflate(R.layout.custom_company, null);
@@ -788,39 +964,80 @@ public class Register extends AppCompatActivity {
                     alert.show();
                 }
                 else{
-                    Response.Listener<String> response = response1 -> {
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response1);
-                            boolean success = jsonResponse.getBoolean("success");
-                            JSONArray array = jsonResponse.getJSONArray("data");
+
+                    API.getClient().agency().enqueue(new Callback<Object>() {
+                        @Override
+                        public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                            try {
+                                JSONObject jsonResponse = new JSONObject(new Gson().toJson(response.body()));
+                                boolean success = jsonResponse.getBoolean("success");
+                                JSONArray array = jsonResponse.getJSONArray("data");
 
 
 
-                            if(success){
-                                loading.setVisibility(View.GONE);
-                                for (int i = 0; i < array.length(); i++) {
-                                    JSONObject object = array.getJSONObject(i);
-//                            gs_trucking item = new gs_trucking(object.getString("AGENCY"));
-//                            list_trucking.add(item);
-                                    list_trucking.add(object.getString("AGENCY"));
+                                if(success){
+                                    loading.setVisibility(View.GONE);
+                                    for (int i = 0; i < array.length(); i++) {
+                                        JSONObject object = array.getJSONObject(i);
+    //                            gs_trucking item = new gs_trucking(object.getString("AGENCY"));
+    //                            list_trucking.add(item);
+                                        list_trucking.add(object.getString("AGENCY"));
 
+                                    }
+                                    adapter = new ArrayAdapter(view.getContext(), android.R.layout.simple_list_item_1,list_trucking);
+                                    trucklist.setAdapter(adapter);
+    //                        adapter = new adapter_trucking(this,list_trucking);
+    //                        trucklist.setAdapter(adapter);
                                 }
-                                adapter = new ArrayAdapter(view.getContext(), android.R.layout.simple_list_item_1,list_trucking);
-                                trucklist.setAdapter(adapter);
-//                        adapter = new adapter_trucking(this,list_trucking);
-//                        trucklist.setAdapter(adapter);
-                            }
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    };
-                    Response.ErrorListener errorListener = error -> {
-                        loading.setVisibility(View.VISIBLE);
-                    };
-                    agency get = new agency(response,errorListener);
-                    RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                    queue.add(get);
+
+                        @Override
+                        public void onFailure(Call<Object> call, Throwable t) {
+                            if (t instanceof IOException) {
+                                loading.setVisibility(View.VISIBLE);
+                                function.getInstance(getApplicationContext()).toastip(R.raw.error_con,t.getMessage());
+                            }
+                        }
+                    });
+
+
+//                    Response.Listener<String> response = response1 -> {
+//                        try {
+//                            JSONObject jsonResponse = new JSONObject(response1);
+//                            boolean success = jsonResponse.getBoolean("success");
+//                            JSONArray array = jsonResponse.getJSONArray("data");
+//
+//
+//
+//                            if(success){
+//                                loading.setVisibility(View.GONE);
+//                                for (int i = 0; i < array.length(); i++) {
+//                                    JSONObject object = array.getJSONObject(i);
+////                            gs_trucking item = new gs_trucking(object.getString("AGENCY"));
+////                            list_trucking.add(item);
+//                                    list_trucking.add(object.getString("AGENCY"));
+//
+//                                }
+//                                adapter = new ArrayAdapter(view.getContext(), android.R.layout.simple_list_item_1,list_trucking);
+//                                trucklist.setAdapter(adapter);
+////                        adapter = new adapter_trucking(this,list_trucking);
+////                        trucklist.setAdapter(adapter);
+//                            }
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    };
+//                    Response.ErrorListener errorListener = error -> {
+//                        loading.setVisibility(View.VISIBLE);
+//                    };
+//                    agency get = new agency(response,errorListener);
+//                    RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+//                    queue.add(get);
 
                     AlertDialog.Builder dialog = new AlertDialog.Builder(view.getContext());
                     View vs = LayoutInflater.from(view.getContext()).inflate(R.layout.custom_company, null);
