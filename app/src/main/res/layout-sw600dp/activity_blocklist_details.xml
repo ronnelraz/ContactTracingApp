@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Blocklist_details">
+
+
+    <RelativeLayout
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/back"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="back"
+            android:text="Back"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_icons8_back"
+            app:iconSize="20dp" />
+
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:id="@+id/con1"
+            android:layout_below="@+id/back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textSize="19sp"
+                android:id="@+id/name"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:textSize="19sp"
+                android:id="@+id/address"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Category"
+                android:textSize="19sp"
+                android:id="@+id/caetgory"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Plate no"
+                android:textSize="19sp"
+                android:id="@+id/plate"/>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_marginTop="10dp"
+            android:id="@+id/div"
+            android:layout_below="@+id/con1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"/>
+
+        <RelativeLayout
+            android:id="@+id/logs"
+            android:layout_below="@+id/div"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_margin="20dp"
+                    android:paddingBottom="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+
+                    <TextView
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Start Date"
+                        android:textSize="18sp"/>
+
+
+                    <EditText
+                        android:id="@+id/start"
+                        android:clickable="true"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded"
+                        android:drawableRight="@drawable/icons8_calendar_1"
+                        android:drawableTint="@color/black"/>
+
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="End Date"
+                        android:textSize="18sp"/>
+
+
+                    <EditText
+                        android:id="@+id/end"
+                        android:clickable="true"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded"
+                        android:drawableRight="@drawable/icons8_calendar_1"
+                        android:drawableTint="@color/black"/>
+
+
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Block Type"
+                        android:textSize="18sp"/>
+
+                    <fr.ganfra.materialspinner.MaterialSpinner
+                        android:id="@+id/blocktype"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Remark"
+                        android:textSize="18sp"/>
+                    <EditText
+                        android:id="@+id/remark"
+                        android:hint="Remark"
+                        android:background="@drawable/rounded"
+                        android:inputType="textMultiLine"
+                        android:lines="8"
+                        android:minLines="6"
+                        android:gravity="top|start"
+                        android:maxLines="10"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:scrollbars="vertical" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/saveblock"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Save change"
+                        app:icon="@drawable/icons8_ok"
+                        app:iconGravity="textStart"/>
+
+                </LinearLayout>
+            </ScrollView>
+
+
+
+
+        </RelativeLayout>
+
+
+
+
+    </RelativeLayout>
+
+</ScrollView>

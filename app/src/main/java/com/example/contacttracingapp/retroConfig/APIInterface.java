@@ -17,8 +17,8 @@ public interface APIInterface {
     Call<Object> ScannedPerson();
 
     @FormUrlEncoded
-    @POST("vaccinated")
-    Call<Object> VACCINE(@Field("contact") String contact);
+    @POST("vaccinatedV1")
+    Call<Object> VACCINE(@Field("contact") String contact,@Field("name") String name,@Field("lname") String lname);
 
     @FormUrlEncoded
     @POST("appscantemp")
@@ -74,5 +74,33 @@ public interface APIInterface {
     @FormUrlEncoded
     @POST("scannedID")
     Call<Object> ScannedID(@Field("contact") String contact,@Field("AD") String AD);
+
+    @POST("BanType")
+    Call<Object> GetBanTypes();
+
+    @FormUrlEncoded
+    @POST("BanPerson")
+    Call<Object> Ban(@Field("id") String id,
+                     @Field("start") String start,
+                     @Field("end") String end,
+                     @Field("type") String type,
+                     @Field("remark") String remark,
+                     @Field("AD") String AD);
+
+    @POST("Blocklisted")
+    Call<Object> Blocklisted();
+
+
+    @FormUrlEncoded
+    @POST("update_banned")
+    Call<Object> UpdateBanned(@Field("id") String id,
+                              @Field("start") String start,
+                              @Field("end") String end,
+                              @Field("type") String type,
+                              @Field("remark") String remark,
+                              @Field("AD") String AD);
+
+    @POST("employees")
+    Call<Object> Employees();
 
 }

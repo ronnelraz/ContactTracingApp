@@ -40,7 +40,6 @@
             android:id="@+id/icon" />
 
         <LinearLayout
-            android:gravity="center"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="85dp"
             android:layout_alignParentLeft="true"
@@ -55,21 +54,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="@tools:sample/full_names"
-                android:textSize="10sp"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:id="@+id/address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="Sample address location"
-                android:textSize="10sp"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:id="@+id/company"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="Company Name"
-                android:textSize="10sp"/>
+                android:textSize="18sp"/>
 
         </LinearLayout>
 

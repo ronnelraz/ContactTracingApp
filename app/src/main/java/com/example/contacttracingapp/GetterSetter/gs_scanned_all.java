@@ -2,14 +2,15 @@ package com.example.contacttracingapp.GetterSetter;
 
 public class gs_scanned_all {
 
-    public String type,name,temp,date,company;
+    public String type,name,temp,date,company,vaccine;
 
-    public gs_scanned_all(String type, String name, String temp, String date, String company) {
+    public gs_scanned_all(String type, String name, String temp, String date, String company, String vaccine) {
         this.type = type;
         this.name = name;
         this.temp = temp;
         this.date = date;
         this.company = company;
+        this.vaccine = vaccine;
     }
 
     public String getType() {
@@ -50,5 +51,13 @@ public class gs_scanned_all {
 
     public void setCompany(String company) {
         this.company = company;
+    }
+
+    public String getVaccine() {
+        return vaccine;
+    }
+
+    public void setVaccine(String vaccine) {
+        this.vaccine = vaccine;
     }
 }

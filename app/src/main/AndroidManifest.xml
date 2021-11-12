@@ -27,6 +27,15 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:theme">
         <activity
+            android:name=".Register_employee"
+            android:exported="true" />
+        <activity
+            android:name=".Blocklist_details"
+            android:exported="true" />
+        <activity
+            android:name=".Blocklist"
+            android:exported="true" />
+        <activity
             android:name=".Details"
             android:exported="true" />
         <activity

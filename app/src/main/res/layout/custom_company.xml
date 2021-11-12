@@ -37,11 +37,11 @@
             app:lottie_loop="true"/>
 
         <ListView
-            android:layout_below="@+id/searchTruck"
             android:id="@+id/list_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/custom_company_list"/>
+            android:layout_below="@+id/searchTruck"
+            tools:listitem="@layout/custom_company_list" />
 
 
     </RelativeLayout>

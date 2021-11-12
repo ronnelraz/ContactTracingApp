@@ -98,10 +98,10 @@
                       android:layout_weight="1"
                       android:background="?attr/selectableItemBackground"
                       app:icon="@drawable/scanner_1"
-                      app:iconSize="25dp"
+                      app:iconSize="30dp"
                       android:text="Scan"
                       app:iconGravity="top"
-                      android:textSize="8sp"
+                      android:textSize="14sp"
                       />
 
                   <com.google.android.material.button.MaterialButton
@@ -111,10 +111,10 @@
                       android:layout_weight="1"
                       android:background="?attr/selectableItemBackground"
                       app:icon="@drawable/icons8_add_user_male_1"
-                      app:iconSize="25dp"
+                      app:iconSize="30dp"
                       android:text="Register"
                       app:iconGravity="top"
-                      android:textSize="8sp"
+                      android:textSize="14sp"
                       />
 
                   <com.google.android.material.button.MaterialButton
@@ -124,10 +124,10 @@
                       android:layout_weight="1"
                       android:background="?attr/selectableItemBackground"
                       app:icon="@drawable/icons8_conference_1"
-                      app:iconSize="25dp"
+                      app:iconSize="30dp"
                       android:text="Employee"
                       app:iconGravity="top"
-                      android:textSize="8sp"
+                      android:textSize="14sp"
                       />
 
                   <com.google.android.material.button.MaterialButton
@@ -137,10 +137,10 @@
                       android:layout_weight="1"
                       android:background="?attr/selectableItemBackground"
                       app:icon="@drawable/ic_icons8_search_client_1"
-                      app:iconSize="25dp"
+                      app:iconSize="30dp"
                       android:text="Search"
                       app:iconGravity="top"
-                      android:textSize="8sp"
+                      android:textSize="14sp"
                       />
 
                   <com.google.android.material.button.MaterialButton
@@ -150,10 +150,10 @@
                       android:layout_weight="1"
                       android:background="?attr/selectableItemBackground"
                       app:icon="@drawable/ban"
-                      app:iconSize="25dp"
+                      app:iconSize="30dp"
                       android:text="Block list"
                       app:iconGravity="top"
-                      android:textSize="8sp"
+                      android:textSize="13sp"
                       />
 
 

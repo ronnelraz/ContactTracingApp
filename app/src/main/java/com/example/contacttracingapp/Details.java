@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -53,7 +54,9 @@ import com.example.contacttracingapp.config.con_updateregister;
 import com.example.contacttracingapp.config.config;
 import com.example.contacttracingapp.config.province;
 import com.example.contacttracingapp.config.trucking;
+import com.example.contacttracingapp.retroConfig.API;
 import com.google.android.material.button.MaterialButton;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -81,8 +84,12 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import fr.ganfra.materialspinner.MaterialSpinner;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class Details extends AppCompatActivity {
 
@@ -185,6 +192,19 @@ public class Details extends AppCompatActivity {
 
 
 
+    @BindView(R.id.start) EditText startDate;
+    @BindView(R.id.end) EditText endDate;
+    final Calendar myCalendar = Calendar.getInstance();
+    @BindView(R.id.blocktype)
+    MaterialSpinner blocktype;
+    ArrayAdapter banAdapter;
+    List<String> listType = new ArrayList<>();
+    List<String> listId = new ArrayList<>();
+    private String str_id = null;
+    @BindView(R.id.remark) EditText remark;
+    @BindView(R.id.saveblock) MaterialButton saveblock;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -219,7 +239,7 @@ public class Details extends AppCompatActivity {
         SelectProvince();
 
         close.setOnClickListener(v -> {
-            function.intent(Home.class,this);
+            function.intent(Search.class,this);
             finish();
         });
 
@@ -244,6 +264,180 @@ public class Details extends AppCompatActivity {
         }
 
         Actions(actions);
+        BlockPerson();
+
+
+        API.getClient().GetBanTypes().enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(new Gson().toJson(response.body()));
+                    boolean success = jsonObject.getBoolean("success");
+                    JSONArray array = jsonObject.getJSONArray("data");
+
+                    if(success){
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject object = array.getJSONObject(i);
+                            listType.add(object.getString("type"));
+                            listId.add(object.getString("id"));
+
+                        }
+
+                        banAdapter = new ArrayAdapter(Details.this, android.R.layout.simple_spinner_item,listType);
+                        banAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        blocktype.setAdapter(banAdapter);
+
+
+                    }
+                    else{
+
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+
+            }
+        });
+
+
+        blocktype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                str_id = listId.get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+    }
+
+
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void BlockPerson(){
+        startDate.setOnTouchListener((v, event) -> {
+            final int DRAWABLE_RIGHT = 2;
+            if(event.getAction() == MotionEvent.ACTION_UP) {
+                if(event.getRawX() >= (startDate.getRight() - startDate.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    new DatePickerDialog(v.getContext(),R.style.picker,cal_start(), myCalendar
+                            .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                            myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        startDate.setOnClickListener(view -> {
+            new DatePickerDialog(view.getContext(),R.style.picker,cal_start(), myCalendar
+                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        });
+
+        endDate.setOnTouchListener((v, event) -> {
+            final int DRAWABLE_RIGHT = 2;
+            if(event.getAction() == MotionEvent.ACTION_UP) {
+                if(event.getRawX() >= (startDate.getRight() - startDate.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    new DatePickerDialog(v.getContext(),R.style.picker, cal_end(), myCalendar
+                            .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                            myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        endDate.setOnClickListener(v -> {
+            new DatePickerDialog(v.getContext(),R.style.picker, cal_end(), myCalendar
+                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        });
+
+
+
+        saveblock.setOnClickListener(v -> {
+            String getstart = startDate.getText().toString();
+            String getEnd = endDate.getText().toString();
+            String getTypeID = str_id;
+            String getRemark = remark.getText().toString();
+
+
+            if(getstart.isEmpty()){
+                startDate.performClick();
+            }
+            else if(getEnd.isEmpty()){
+                endDate.performClick();
+            }
+            else if(getRemark.isEmpty()){
+                remark.requestFocus();
+                controller.toastip(R.raw.error_con,"Please Enter remark");
+            }
+            else{
+                new SweetAlertDialog(v.getContext(), SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Are you sure?")
+                        .setContentText("you want to block this person?")
+                        .setConfirmText("Block")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                controller.loading();
+                                API.getClient().Ban(id,getstart,getEnd,getTypeID,getRemark,controller.getAD()).enqueue(new Callback<Object>() {
+                                    @Override
+                                    public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                                        try {
+                                            JSONObject jsonObject = new JSONObject(new Gson().toJson(response.body()));
+                                            Boolean success = jsonObject.getBoolean("success");
+
+                                            if(success){
+                                                function.pDialog.dismissWithAnimation();
+                                                sDialog.dismissWithAnimation();
+                                                controller.toastip(R.raw.ok,"Banned Successfully");
+
+                                            }
+                                            else{
+                                                function.pDialog.dismissWithAnimation();
+                                                sDialog.dismissWithAnimation();
+                                                controller.toastip(R.raw.error_con,"Sorry This person already banned");
+                                            }
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Object> call, Throwable t) {
+                                        if(t instanceof IOException){
+                                            controller.toastip(R.raw.error_con,t.getMessage());
+                                        }
+                                    }
+                                });
+
+                            }
+                        })
+                        .setCancelButton("Cancel", new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismissWithAnimation();
+                            }
+                        })
+                        .show();
+
+
+            }
+
+        });
+
 
     }
 
@@ -1088,10 +1282,43 @@ public class Details extends AppCompatActivity {
         return date;
     }
 
+
+    private DatePickerDialog.OnDateSetListener cal_start(){
+        DatePickerDialog.OnDateSetListener date = (view1, year, monthOfYear, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, monthOfYear);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            Formatter_start();
+        };
+        return date;
+    }
+
+    private DatePickerDialog.OnDateSetListener cal_end(){
+        DatePickerDialog.OnDateSetListener date = (view1, year, monthOfYear, dayOfMonth) -> {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, monthOfYear);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            Formatter_end();
+        };
+        return date;
+    }
+
     private void Formatter() {
         String myFormat = "dd/MM/yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         mdob.setText(sdf.format(calendar.getTime()));
+    }
+
+    private void Formatter_start() {
+        String myFormat = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        startDate.setText(sdf.format(calendar.getTime()));
+    }
+
+    private void Formatter_end() {
+        String myFormat = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        endDate.setText(sdf.format(calendar.getTime()));
     }
 
 

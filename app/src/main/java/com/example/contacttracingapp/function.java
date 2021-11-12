@@ -7,12 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.AuthFailureError;
@@ -22,10 +25,13 @@ import com.android.volley.ParseError;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.google.android.material.button.MaterialButton;
 import com.novoda.merlin.Merlin;
 
 import java.util.List;
 
+import butterknife.BindViews;
+import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class function {
@@ -132,6 +138,39 @@ public class function {
         editor.putString(AD,list.get(3));
         editor.apply();
         return true;
+    }
+
+
+    @BindViews({R.id.bantype,R.id.message,R.id.name,R.id.plate,R.id.remark,R.id.start,R.id.end,R.id.footer})
+    TextView[] BanContent;
+    public void BanModal(String type,String msg,String name,String plate,String remark,String start,String end,String footer){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(cont);
+        View vs = LayoutInflater.from(cont).inflate(R.layout.ban_dialog, null);
+        ButterKnife.bind(this,vs);
+        MaterialButton ok = vs.findViewById(R.id.ok);
+
+        BanContent[0].setText(type);
+        BanContent[1].setText(msg);
+        BanContent[2].setText(name);
+        BanContent[3].setText(plate);
+        BanContent[4].setText(remark);
+        BanContent[5].setText(start);
+        BanContent[6].setText(end);
+        BanContent[7].setText(footer);
+
+
+
+        dialog.setView(vs);
+        AlertDialog alert = dialog.create();
+
+        ok.setOnClickListener(v -> {
+            alert.dismiss();
+        });
+
+        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alert.setCanceledOnTouchOutside(false);
+        alert.setCancelable(true);
+        alert.show();
     }
 
 

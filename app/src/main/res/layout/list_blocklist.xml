@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="3dp"
+    app:cardElevation="10dp"
+    app:cardMaxElevation="10dp"
+    android:id="@+id/card"
+    android:layout_height="wrap_content">
+
+
+    <ImageView
+        android:layout_marginLeft="10dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_icons8_unavailable"
+        android:layout_gravity="center|left"/>
+
+
+    <LinearLayout
+        android:layout_marginLeft="60dp"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="NAME"
+            android:id="@+id/name"/>
+
+        <TextView
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Company"
+            android:id="@+id/company"/>
+
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

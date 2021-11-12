@@ -104,6 +104,7 @@ public class Home extends AppCompatActivity {
     LinearLayout radioGroup;
 
 
+    function controller;
     //qrcode
     CodeScanner mCodeScanner;
     ArrayList<String> qrcodeData = new ArrayList<>();
@@ -138,10 +139,11 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         function.getInstance(this);
         drawableMenu();
+        controller = new function(this);
 
         gs_areaList = new ArrayList<>();
         //checkAreas();
@@ -266,7 +268,8 @@ public class Home extends AppCompatActivity {
                                     object.getString("name"),
                                     object.getString("temp"),
                                     object.getString("dt"),
-                                    object.getString("cn")
+                                    object.getString("cn"),
+                                    object.getString("vaccinated")
                             );
 
                             list.add(item);
@@ -398,8 +401,11 @@ public class Home extends AppCompatActivity {
                     function.intent(Register.class,Home.this);
                     break;
                 case R.id.employee:
-                    Toast.makeText(Home.this, "Not Available", Toast.LENGTH_SHORT).show();
+                    function.intent(Register_employee.class,Home.this);
 //                    function.intent(Employee.class,Home.this);
+                    break;
+                case R.id.blocklist:
+                    function.intent(Blocklist.class,Home.this);
                     break;
                 case R.id.search:
                     function.intent(Search.class,Home.this);
@@ -495,29 +501,39 @@ public class Home extends AppCompatActivity {
                                                  JSONObject jsonResponse = new JSONObject(new Gson().toJson(response.body()));
                                                  boolean success = jsonResponse.getBoolean("success");
                                                  if(success){
-                                                     TextView textView = new TextView(Home.this);
+//                                                     TextView textView = new TextView(Home.this);
+////
+//                                                     textView.setText(new StringBuilder().append(jsonResponse.getString("name")).append(" has been Banned until " + jsonResponse.getString("end")).append("\n").append("Plate No : ").append(jsonResponse.getString("plate")).append("\nRemark : ").append(jsonResponse.getString("remark")).append("\n\nPlease do not allow this person go inside in the feedmill.").toString());
+//                                                     textView.setTextSize(18);
+//                                                     textView.setWidth(500);
+//                                                     textView.setHeight(500);
+//                                                     new SweetAlertDialog(Home.this, SweetAlertDialog.WARNING_TYPE)
+//                                                             .setTitleText(jsonResponse.getString("ban_type"))
+//                                                             .setCustomView(textView.getRootView())
+//                                                             .setConfirmText("ok")
+//                                                             .setCancelClickListener(null)
 //
-                                                     textView.setText(new StringBuilder().append(jsonResponse.getString("name")).append(" has been Banned until " + jsonResponse.getString("end")).append("\n").append("Plate No : ").append(jsonResponse.getString("plate")).append("\nRemark : ").append(jsonResponse.getString("remark")).append("\n\nPlease do not allow this person go inside in the feedmill.").toString());
-                                                     textView.setTextSize(18);
-                                                     textView.setWidth(500);
-                                                     textView.setHeight(500);
-                                                     new SweetAlertDialog(Home.this, SweetAlertDialog.WARNING_TYPE)
-                                                             .setTitleText(jsonResponse.getString("ban_type"))
-                                                             .setCustomView(textView.getRootView())
-                                                             .setConfirmText("ok")
-                                                             .setCancelClickListener(null)
-
-                                                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                                                 @Override
-                                                                 public void onClick(SweetAlertDialog sDialog) {
-                                                                     sDialog.dismissWithAnimation();
-                                                                 }
-                                                             })
-                                                             .show();
+//                                                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                                                                 @Override
+//                                                                 public void onClick(SweetAlertDialog sDialog) {
+//                                                                     sDialog.dismissWithAnimation();
+//                                                                 }
+//                                                             })
+//                                                             .show();
+                                                     controller.BanModal(
+                                                             jsonResponse.getString("ban_type"),
+                                                             "This person has been banned until " + jsonResponse.getString("end"),
+                                                             "Name : " + jsonResponse.getString("name"),
+                                                             "Plate no. : " + jsonResponse.getString("plate"),
+                                                             "Remark : " + jsonResponse.getString("remark"),
+                                                             "Start : " + jsonResponse.getString("start"),
+                                                             "End : " + jsonResponse.getString("end"),
+                                                             "Thank you."
+                                                     );
 
                                                  }
                                                  else{
-                                                     API.getClient().VACCINE(qrcodeData.get(6)).enqueue(new Callback<Object>() {
+                                                     API.getClient().VACCINE(qrcodeData.get(6),data[9],data[11]).enqueue(new Callback<Object>() {
                                                          @Override
                                                          public void onResponse(Call<Object> callok, retrofit2.Response<Object> responseok) {
                                                              try {
@@ -526,6 +542,7 @@ public class Home extends AppCompatActivity {
                                                                  JSONArray array = jsonResponse.getJSONArray("data");
                                                                  if(success){
                                                                      for (int i = 0; i < array.length(); i++) {
+//                                                                         Toast.makeText(getApplicationContext(), i+"", Toast.LENGTH_SHORT).show();
                                                                          JSONObject object = array.getJSONObject(i);
                                                                          open_modal_temperature(data[19],data[9],data[11],data[15],object.getString("vaccinated"));
                                                                      }
@@ -808,6 +825,10 @@ public class Home extends AppCompatActivity {
     }
 
     public void employee(View view) {
-        Toast.makeText(Home.this, "Not Available", Toast.LENGTH_SHORT).show();
+        function.intent(Register_employee.class,Home.this);
+    }
+
+    public void blocklist(View view) {
+        function.intent(Blocklist.class,Home.this);
     }
 }

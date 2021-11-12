@@ -32,6 +32,15 @@
         app:showAsAction="never"/>
 
 
+
+        <item
+            android:id="@+id/blocklist"
+            android:title="Block list"
+            android:icon="@drawable/ban"
+            android:iconTint="@color/black"
+            app:showAsAction="never"/>
+
+
     <item
         android:id="@+id/bluetooth"
         android:title="Connect to Bluetooth"

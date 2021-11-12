@@ -129,12 +129,14 @@ public class Register extends AppCompatActivity {
     /*Province*/
     @BindView(R.id.province) TextView openProvince;
     private List<String> list_province_name = new ArrayList<>();
+    private List<String> getList_province_id = new ArrayList<>();
     private ArrayAdapter adapter_province;
     private String provinceSubID = "";
 
     /*City*/
     @BindView(R.id.municity) TextView opencity;
     private List<String> list_city_name = new ArrayList<>();
+    private List<String> getList_city_id = new ArrayList<>();
     private ArrayAdapter adapter_city;
     private String citySubID = "";
 
@@ -439,28 +441,7 @@ public class Register extends AppCompatActivity {
     }catch (Exception e){
 
     }
-//        Response.Listener<String> response = response1 -> {
-//            try {
-//                JSONObject jsonResponse = new JSONObject(response1);
-//                boolean success = jsonResponse.getBoolean("success");
-//                if(success){
-//                    controller.toastip(R.raw.ok,"Register Successfully");
-//                }
-//                else{
-//                    controller.toastip(R.raw.error_con,"something went wrong. Please Try Again Later.");
-//                }
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        };
-//        Response.ErrorListener errorListener = error -> {
-//
-//        };
-//        con_register get = new con_register(type,cn,empid,plate,name,lname,gender,dob,age,address,contact,AD,pro,mun,brgy,img,plantcode,vaccine
-//                ,response,errorListener);
-//        RequestQueue queue = Volley.newRequestQueue(Register.this);
-//        queue.add(get);
+
     }
 
 
@@ -512,7 +493,8 @@ public class Register extends AppCompatActivity {
                                 loading.setVisibility(View.GONE);
                                 for (int i = 0; i < array.length(); i++) {
                                     JSONObject object = array.getJSONObject(i);
-                                    list_province_name.add(object.getString("name") + "-" +object.getString("subid"));
+                                    list_province_name.add(object.getString("name")); // + "-" +object.getString("subid")
+                                    getList_province_id.add(object.getString("subid"));
 
                                 }
 
@@ -592,11 +574,16 @@ public class Register extends AppCompatActivity {
                 });
 
                 trucklist.setOnItemClickListener((adapterView, view1, i, l) -> {
-                    String[] ProvinceList = adapter_province.getItem(i).toString().split("-");
-                    function.getInstance(getApplicationContext()).toastip(R.raw.ok,ProvinceList[0]);
-                    provinceSubID = ProvinceList[1];
-                    openProvince.setText(ProvinceList[0]);
-                    SelectCity(ProvinceList[1]);
+//                    String[] ProvinceList = adapter_province.getItem(i).toString().split("-");
+//                    function.getInstance(getApplicationContext()).toastip(R.raw.ok,ProvinceList[0]);
+//                    provinceSubID = ProvinceList[1];
+//                    openProvince.setText(ProvinceList[0]);
+//                    SelectCity(ProvinceList[1]);
+//                    alert.dismiss();
+
+                    openProvince.setText(adapter_province.getItem(i).toString());
+                    int indexOf = list_province_name.indexOf(adapter_province.getItem(i));
+                    SelectCity(getList_province_id.get(indexOf));
                     alert.dismiss();
                 });
 
@@ -631,7 +618,8 @@ public class Register extends AppCompatActivity {
                             loading.setVisibility(View.GONE);
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject object = array.getJSONObject(i);
-                                list_city_name.add(object.getString("name") + "-" +object.getString("subid"));
+                                list_city_name.add(object.getString("name"));
+                                getList_city_id.add(object.getString("subid"));
 
                             }
 
@@ -708,11 +696,15 @@ public class Register extends AppCompatActivity {
                 });
 
                 trucklist.setOnItemClickListener((adapterView, view1, i, l) -> {
-                    String[] CityList = adapter_city.getItem(i).toString().split("-");
-                    function.getInstance(getApplicationContext()).toastip(R.raw.ok,CityList[0]);
-                    citySubID = CityList[1];
-                    opencity.setText(CityList[0]);
-                    SelectBrgy(CityList[1]);
+//                    String[] CityList = adapter_city.getItem(i).toString().split("-");
+//                    function.getInstance(getApplicationContext()).toastip(R.raw.ok,CityList[0]);
+//                    citySubID = CityList[1];
+//                    opencity.setText(CityList[0]);
+//                    SelectBrgy(CityList[1]);
+//                    alert.dismiss();
+                    opencity.setText(adapter_city.getItem(i).toString());
+                    int indexOf = list_city_name.indexOf(adapter_city.getItem(i));
+                    SelectBrgy(getList_city_id.get(indexOf));
                     alert.dismiss();
                 });
 
@@ -752,7 +744,7 @@ public class Register extends AppCompatActivity {
                             loading.setVisibility(View.GONE);
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject object = array.getJSONObject(i);
-                                list_barangay_name.add(object.getString("name") + "-" +object.getString("subid"));
+                                list_barangay_name.add(object.getString("name"));
 
                             }
 
@@ -829,9 +821,12 @@ public class Register extends AppCompatActivity {
                 });
 
                 trucklist.setOnItemClickListener((adapterView, view1, i, l) -> {
-                    String[] BrgyList = adapter_barangay.getItem(i).toString().split("-");
-                    function.getInstance(getApplicationContext()).toastip(R.raw.ok,BrgyList[0]);
-                    openbarangay.setText(BrgyList[0]);
+//                    String[] BrgyList = adapter_barangay.getItem(i).toString().split("-");
+//                    function.getInstance(getApplicationContext()).toastip(R.raw.ok,BrgyList[0]);
+//                    openbarangay.setText(BrgyList[0]);
+//                    alert.dismiss();
+
+                    openbarangay.setText(adapter_barangay.getItem(i).toString());
                     alert.dismiss();
                 });
 

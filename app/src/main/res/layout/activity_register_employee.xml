@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+
+                <ImageView
+                    android:id="@+id/imageoutput"
+                    android:layout_width="match_parent"
+                    android:layout_height="170dp"
+                    android:layout_centerInParent="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/id" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/opencamera"
+                    android:layout_width="50dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginRight="5dp"
+                    app:cornerRadius="50dp"
+                    app:icon="@drawable/camera_to_take_photos"
+                    app:iconGravity="start"
+                    app:iconSize="19dp" />
+
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:onClick="back"
+                    android:text="Back"
+                    app:cornerRadius="20dp"
+                    app:icon="@drawable/ic_icons8_back"
+                    app:iconGravity="textStart"
+                    app:iconSize="20dp" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select Employee"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
+            <TextView
+                android:id="@+id/Employee"
+                android:background="@drawable/rounded"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Required"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:drawableRight="@drawable/icons8_expand_arrow"
+                android:drawableTint="@color/black"/>
+
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="VACCINE"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
+            <RadioGroup
+                android:id="@+id/vaccine"
+                android:layout_marginLeft="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/yes"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/purple_500"
+                    android:text="YES"
+                    android:layout_marginRight="10dp"/>
+
+                <RadioButton
+                    android:id="@+id/no"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/purple_500"
+                    android:text="NO" />
+
+
+            </RadioGroup>
+
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TITLE"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
+            <RadioGroup
+                android:id="@+id/title"
+                android:layout_marginLeft="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/mr"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/purple_500"
+                    android:text="MR"
+                    android:layout_marginRight="10dp"/>
+
+                <RadioButton
+                    android:id="@+id/mrs"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/purple_500"
+                    android:text="MRS/MS" />
+
+
+            </RadioGroup>
+
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Date of Birth (dd/MM/YYYY)"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
+
+            <LinearLayout
+                android:layout_marginTop="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:enabled="false"
+                    android:inputType="number"
+                    android:layout_marginLeft="3dp"
+                    android:id="@+id/dob"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:layout_height="wrap_content"
+                    android:hint="Required"
+                    android:layout_gravity="left"
+                    android:background="@drawable/rounded"
+                    android:layout_marginRight="15dp"
+                    android:textColorHint="@color/black"
+                    android:textColor="@color/black"
+                    android:drawableRight="@drawable/icons8_calendar_1"
+                    android:drawableTint="@color/black"/>
+
+                <TextView
+                    android:gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:id="@+id/age"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="43dp"
+                    android:text="Age"
+                    android:layout_gravity="right"
+                    android:background="@drawable/rounded"
+                    android:textColorHint="@color/black"
+                    android:textColor="@color/black"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="First Name"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
+
+            <EditText
+                android:enabled="false"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/fname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Required"
+                android:inputType="text"
+                android:layout_gravity="left"
+                android:background="@drawable/rounded"
+                android:layout_marginRight="10dp"
+                android:textColorHint="@color/black"
+                android:textColor="@color/black" />
+
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Last Name"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
+
+            <EditText
+                android:enabled="false"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/lname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Required"
+                android:inputType="text"
+                android:layout_gravity="left"
+                android:background="@drawable/rounded"
+                android:layout_marginRight="10dp"
+                android:textColorHint="@color/black"
+                android:textColor="@color/black" />
+
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Company"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
+
+
+            <TextView
+                android:id="@+id/spinnerSelectCompany"
+                tools:visibility="visible"
+                android:visibility="gone"
+                android:background="@drawable/rounded"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Required"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:drawableRight="@drawable/icons8_expand_arrow"
+                android:drawableTint="@color/black"/>
+
+
+            <EditText
+                android:layout_marginLeft="10dp"
+                android:id="@+id/company"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:hint="Required"
+                android:enabled="false"
+                android:text="CHAROEN POKPHAND FOODS PHILIPPINES"
+                android:inputType="text"
+                android:gravity="top|left"
+                android:background="@drawable/rounded"
+                android:layout_marginRight="10dp"
+                android:textColorHint="@color/black"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/spinnercompany"
+                tools:visibility="visible"
+                android:visibility="gone"
+                android:background="@drawable/rounded"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Required"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:drawableRight="@drawable/icons8_expand_arrow"
+                android:drawableTint="@color/black"/>
+
+
+            <TextView
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/ic_icons8_address_4"
+                android:drawableTint="@color/black"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ADDRESS"
+                android:textColor="#FFA000"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
+
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Province"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
+
+
+            <TextView
+                android:id="@+id/province"
+                android:background="@drawable/rounded"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Required"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:drawableRight="@drawable/icons8_expand_arrow"
+                android:drawableTint="@color/black"/>
+
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Municipality/City"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
+
+
+            <TextView
+                android:id="@+id/municity"
+                android:background="@drawable/rounded"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Required"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:drawableRight="@drawable/icons8_expand_arrow"
+                android:drawableTint="@color/black"/>
+
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Barangay"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
+
+
+            <TextView
+                android:id="@+id/barangay"
+                android:background="@drawable/rounded"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Required"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:drawableRight="@drawable/icons8_expand_arrow"
+                android:drawableTint="@color/black"/>
+
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Contact No."
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
+
+
+            <EditText
+                android:id="@+id/contact"
+                android:background="@drawable/rounded"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Required"
+                android:maxLength="11"
+                android:inputType="number"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Plate No."
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"/>
+
+
+            <EditText
+                android:id="@+id/plate"
+                android:background="@drawable/rounded"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Optional"
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
+
+
+
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="30dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <com.google.android.material.button.MaterialButton
+                    app:cornerRadius="20dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="5dp"
+                    app:icon="@drawable/ic_icons8_ok_1"
+                    android:text="Submit"
+                    android:id="@+id/save"
+                    app:iconGravity="textStart"
+                    app:iconSize="20dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    app:cornerRadius="20dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:icon="@drawable/ic_icons8_no"
+                    android:text="Close"
+                    android:id="@+id/close"
+                    app:iconGravity="textStart"
+                    app:iconSize="20dp"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+
+</RelativeLayout>

@@ -135,8 +135,8 @@
 
 
     <LinearLayout
+        android:background="@color/purple_500"
         android:id="@+id/actions"
-        android:layout_margin="10dp"
         android:layout_below="@+id/details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -148,11 +148,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:icon="@drawable/qr_code"
-            app:iconSize="10dp"
-            app:iconGravity="textStart"
-            android:text="Print QR CODE"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"/>
+            app:iconSize="20dp"
+            app:iconGravity="top"
+            app:iconTint="#fff"
+            android:textColor="#fff"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="Print QR CODE" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnmodify"
@@ -161,10 +162,12 @@
             android:layout_weight="1"
             app:icon="@drawable/ic_icons8_edit"
             app:iconSize="20dp"
-            app:iconGravity="textStart"
+            app:iconGravity="top"
+            app:iconTint="#fff"
+            android:textColor="#fff"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:text="Modify"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"/>
+            />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnlog"
@@ -173,10 +176,13 @@
             android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            app:icon="@drawable/ic_baseline_list_24"
+            app:icon="@drawable/ban"
             app:iconSize="20dp"
-            app:iconGravity="textStart"
-            android:text="Scan logs"/>
+            app:iconGravity="top"
+            app:iconTint="#fff"
+            android:textColor="#fff"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="Block"/>
 
     </LinearLayout>
 
@@ -206,7 +212,6 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
     <RelativeLayout
-        tools:visibility="visible"
         android:visibility="gone"
         android:id="@+id/modify"
         android:layout_below="@+id/actions"
@@ -682,71 +687,115 @@
     </RelativeLayout>
 
     <RelativeLayout
+        tools:visibility="visible"
         android:id="@+id/logs"
         android:visibility="gone"
         android:layout_below="@+id/actions"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/listheader"
-            android:layout_margin="10dp"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/to"
-                android:clickable="true"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:drawablePadding="5dp"
-                android:drawableLeft="@drawable/icons8_calendar_1"
-                android:drawableTint="@color/black"
-                android:background="@drawable/rounded"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:hint="Date From"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"/>
-
-            <EditText
-                android:id="@+id/from"
-                android:clickable="true"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:drawablePadding="5dp"
-                android:drawableLeft="@drawable/icons8_calendar_1"
-                android:drawableTint="@color/black"
-                android:background="@drawable/rounded"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:hint="Date From"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                app:icon="@drawable/icons8_search"
-                app:iconSize="20dp"
-                app:iconGravity="textStart"/>
-
-        </LinearLayout>
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_margin="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_below="@+id/listheader"
-            android:id="@+id/data"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:itemCount="2"
-            tools:listitem="@layout/transaction_record_list" />
+
+                <TextView
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Start Date"
+                    android:textSize="18sp"/>
+
+
+                <EditText
+                    android:id="@+id/start"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded"
+                    android:drawableRight="@drawable/icons8_calendar_1"
+                    android:drawableTint="@color/black"/>
+
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="End Date"
+                    android:textSize="18sp"/>
+
+
+                <EditText
+                    android:id="@+id/end"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded"
+                    android:drawableRight="@drawable/icons8_calendar_1"
+                    android:drawableTint="@color/black"/>
+
+
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Block Type"
+                    android:textSize="18sp"/>
+
+                <fr.ganfra.materialspinner.MaterialSpinner
+                    android:id="@+id/blocktype"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Remark"
+                    android:textSize="18sp"/>
+                <EditText
+                    android:id="@+id/remark"
+                    android:hint="Remark"
+                    android:background="@drawable/rounded"
+                    android:inputType="textMultiLine"
+                    android:lines="8"
+                    android:minLines="6"
+                    android:gravity="top|start"
+                    android:maxLines="10"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:scrollbars="vertical" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/saveblock"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Save"
+                    app:icon="@drawable/icons8_ok"
+                    app:iconGravity="textStart"/>
+
+            </LinearLayout>
+        </ScrollView>
+
+
+
+
+
 
     </RelativeLayout>
 

@@ -61,6 +61,17 @@ public class Adapter_scanned extends RecyclerView.Adapter<Adapter_scanned.ViewHo
         holder.company.setText(getData.getCompany());
         holder.date.setText(getData.getDate());
 
+
+
+        if(getData.getVaccine().equals("No")){
+            holder.vaccine.setTextColor(Color.parseColor("#e74c3c"));
+            holder.vaccine.setText("Vaccinated : "+getData.getVaccine());
+        }
+        else{
+            holder.vaccine.setTextColor(Color.parseColor("#2ecc71"));
+            holder.vaccine.setText("Vaccinated : "+getData.getVaccine());
+        }
+
         String ifpassed = Double.parseDouble(getData.getTemp()) >= 37.5 ? "Warning" : "Passed";
         int iconpassed = Double.parseDouble(getData.getTemp()) >= 37.5 ? R.drawable.warning_1 : R.drawable.icons8_ok_3;
         Drawable img = mContext.getResources().getDrawable(iconpassed);
@@ -82,7 +93,7 @@ public class Adapter_scanned extends RecyclerView.Adapter<Adapter_scanned.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder{
 
-       public TextView category,temp,passed,name,company,date;
+       public TextView category,temp,passed,name,company,date,vaccine;
        public MaterialCardView card;
 
         public ViewHolder(View itemView) {
@@ -94,6 +105,7 @@ public class Adapter_scanned extends RecyclerView.Adapter<Adapter_scanned.ViewHo
             company = itemView.findViewById(R.id.company);
             date = itemView.findViewById(R.id.date);
             card = itemView.findViewById(R.id.card);
+            vaccine = itemView.findViewById(R.id.vaccine);
 
 
         }
