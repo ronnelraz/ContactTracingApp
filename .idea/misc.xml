@@ -41,7 +41,7 @@
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_blocklist.xml" value="0.176" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_blocklist_details.xml" value="0.16381578947368422" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_bluetooth_connection.xml" value="0.536" />
-        <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_daily_reports.xml" value="0.264" />
+        <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_daily_reports.xml" value="0.2122602168473728" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_details.xml" value="0.176" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_employee.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/activity_home.xml" value="0.176" />
@@ -58,6 +58,7 @@
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/item_areas.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/list_blocklist.xml" value="0.4" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/modal_areas.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/modal_date_range.xml" value="0.2" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/modal_spinner_employee.xml" value="0.16052631578947368" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/modal_tempareture.xml" value="0.536" />
         <entry key="..\:/Users/CPF Nigs/Desktop/ContactTracingApp/app/src/main/res/layout/navigation_header.xml" value="0.25416666666666665" />

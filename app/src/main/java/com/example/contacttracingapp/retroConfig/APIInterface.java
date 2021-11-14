@@ -103,4 +103,17 @@ public interface APIInterface {
     @POST("employees")
     Call<Object> Employees();
 
+
+    @FormUrlEncoded
+    @POST("report_temp")
+    Call<Object> Temp(@Field("start") String start,
+                      @Field("end") String end,
+                      @Field("plantcode") String plantcode);
+
+    @FormUrlEncoded
+    @POST("report_person")
+    Call<Object> report_person(@Field("start") String start,
+                      @Field("end") String end,
+                      @Field("plantcode") String plantcode);
+
 }
