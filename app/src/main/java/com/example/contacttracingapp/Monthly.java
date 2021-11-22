@@ -1,17 +1,13 @@
 package com.example.contacttracingapp;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.DateFormat;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,6 +24,7 @@ import com.archit.calendardaterangepicker.customviews.DateRangeCalendarView;
 import com.example.contacttracingapp.retroConfig.API;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
+import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +40,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
+import lecho.lib.hellocharts.formatter.SimpleColumnChartValueFormatter;
 import lecho.lib.hellocharts.gesture.ZoomType;
 import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
 import lecho.lib.hellocharts.listener.ViewportChangeListener;
@@ -50,26 +48,24 @@ import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
-import lecho.lib.hellocharts.model.Line;
-import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PieChartData;
-import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.model.ValueShape;
 import lecho.lib.hellocharts.model.Viewport;
-import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.ColumnChartView;
-import lecho.lib.hellocharts.view.LineChartView;
 import lecho.lib.hellocharts.view.PieChartView;
 import lecho.lib.hellocharts.view.PreviewColumnChartView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DailyReports extends AppCompatActivity {
+public class Monthly extends AppCompatActivity {
 
     public static final String[] colors = {"#1abc9c", "#3498db", "#9b59b6", "#34495e", "#f1c40f", "#e67e22", "#e74c3c", "#5f27cd", "#3dc1d3", "#f19066", "#6D214F", "#F8EFBA", "#00b894", "#cf6a87", "#786fa6", "#f3a683", "#d32f2f", "#C2185B", "#7B1FA2", "#512DA8", "#303F9F", "#1976D2", "#0288D1", "#0097A7", "#00796B", "#388E3C", "#689F38", "#AFB42B", "#FBC02D", "#FFA000", "#F57C00", "#E64A19", "#5D4037", "#616161", "#455A64", "#1B5E20"};
+    public static final String[] monthName = {
+      "January","February","March","April","May","June","July","August","September","October","November","December"
+    };
 
     function controller;
     @BindView(R.id.bu)
@@ -93,23 +89,17 @@ public class DailyReports extends AppCompatActivity {
     @BindView(R.id.month) Spinner monthSelect;
     List<String> list_month = new ArrayList<>();
     ArrayAdapter monthAdapter;
-    @BindView(R.id.weeks) Spinner weeks;
-    List<String> list_Weeks = new ArrayList<>();
-    ArrayAdapter weeksAdapter;
 
     /*Weekly Report*/
     private ValueShape shape = ValueShape.CIRCLE;
-    @BindView(R.id.weekly_line)
-    LineChartView weeklyLine;
-    public static final String[] weeekly_weeks = {"Mon    ", "Tue    ", "Wen    ", "Thu    ", "Fri    ", "Sat    ","Sun    "};
+    @BindView(R.id.monthly_person_entrance)
+    ColumnChartView monthly_person_entrance;
+    List<String> month = new ArrayList<>();
+    List<Float> Monthlyvalue = new ArrayList<>();
     @BindViews({R.id.loading1,R.id.loading2,R.id.loading3,R.id.loading4})
     LottieAnimationView[] loading;
-    List<PointValue> values = new ArrayList<>();
-    List<AxisValue> AxisTop = new ArrayList<>();
-    List<AxisValue> AxisBottom = new ArrayList<>();
     int spinnerPosition = 0;
     int check = 0;
-    int checkWeek = 0;
     int checkplantcode = 0;
     int checkplantcodes = 0;
     String SelectedMonth = null;
@@ -142,12 +132,13 @@ public class DailyReports extends AppCompatActivity {
 
     @BindView(R.id.swipe)
     SwipeRefreshLayout swipeRefreshLayout;
+    final Calendar today = Calendar.getInstance();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_daily_reports);
+        setContentView(R.layout.activity_monthly);
         ButterKnife.bind(this);
         controller = new function(this);
         setSpinnerView(spinnerView);
@@ -160,10 +151,10 @@ public class DailyReports extends AppCompatActivity {
                 android.R.color.holo_red_light);
 
         Date date = new Date();
-        CharSequence default_to = DateFormat.format("MMMM dd, yyyy", date.getTime());
-        CharSequence default_from = DateFormat.format("MMMM dd, yyyy", date.getTime());
-        CharSequence default_to_1st = DateFormat.format("MMMM dd, yyyy", date.getTime());
-        CharSequence default_from_last = DateFormat.format("MMMM dd, yyyy", date.getTime());
+        CharSequence default_to = DateFormat.format("MMMM, yyyy", date.getTime());
+        CharSequence default_from = DateFormat.format("MMMM, yyyy", date.getTime());
+        CharSequence default_to_1st = DateFormat.format("MMMM, yyyy", date.getTime());
+        CharSequence default_from_last = DateFormat.format("MMMM, yyyy", date.getTime());
 
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -174,8 +165,8 @@ public class DailyReports extends AppCompatActivity {
             //default
             DataTemp(default_to.toString(),default_from.toString(),"0");
             report_person(default_to.toString(),default_from.toString(),"0");
-            weekly_persons_entrance(default_to_1st.toString(),default_from_last.toString(),"0");
-            Daily_people_Entrance_province(default_to_1st.toString(),default_from_last.toString(),"0");
+            weekly_persons_entrance("0");
+            Monthly_people_Entrance_province(default_to_1st.toString(),default_from_last.toString(),"0");
             EntranceGroup(default_to.toString(),default_from.toString(),"0");
             EntrancAgency(default_to.toString(),default_from.toString(),"0");
             dateRange[0].setText(default_to);
@@ -186,8 +177,8 @@ public class DailyReports extends AppCompatActivity {
 
         DataTemp(default_to.toString(),default_from.toString(),"0");
         report_person(default_to.toString(),default_from.toString(),"0");
-        weekly_persons_entrance(default_to_1st.toString(),default_from_last.toString(),"0");
-        Daily_people_Entrance_province(default_to_1st.toString(),default_from_last.toString(),"0");
+        weekly_persons_entrance("0");
+        Monthly_people_Entrance_province(default_to_1st.toString(),default_from_last.toString(),"0");
         EntranceGroup(default_to.toString(),default_from.toString(),"0");
         EntrancAgency(default_to.toString(),default_from.toString(),"0");
         dateRange[0].setText(default_to);
@@ -213,48 +204,6 @@ public class DailyReports extends AppCompatActivity {
         }
 
 
-        list_Weeks.add("1st Week"); //0
-        list_Weeks.add("2nd Week"); //1
-        list_Weeks.add("3rd Week");
-        list_Weeks.add("4th Week");
-        list_Weeks.add("5th Week"); //4
-
-        weeksAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item,list_Weeks);
-        weeksAdapter.setDropDownViewResource(android.R.layout
-                .simple_spinner_dropdown_item);
-        weeks.setAdapter(weeksAdapter);
-
-        Calendar dateweek = Calendar.getInstance();
-        int weekposition = dateweek.get(Calendar.WEEK_OF_MONTH)-1;
-        weeks.setSelection(weekposition);
-
-
-
-        weeks.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                try{
-                    if(++checkWeek > 1){
-                        loading[0].setVisibility(View.VISIBLE);
-                        Date date = new Date();
-                        CharSequence YEAR = DateFormat.format("yyyy", date.getTime());
-                        CharSequence filterdate = getSelectedWeek(i+1) + " "+YEAR;
-                        String Plantcode = str_plancode;
-                        weekly_persons_entrance(filterdate.toString(),filterdate.toString(),Plantcode);
-//                        Toast.makeText(view.getContext(), filterdate, Toast.LENGTH_SHORT).show();
-
-                    }
-                }
-                catch (Exception e){
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
         monthSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -269,7 +218,6 @@ public class DailyReports extends AppCompatActivity {
                         String getMonthname = list_month.get(indexOf);
                         SelectedMonth = getMonthname;
                         spinnerPosition = indexOf;
-                        weeks.setSelection(0);
 
                         Date date = new Date();
                         CharSequence year = DateFormat.format("yyyy", date.getTime());
@@ -278,7 +226,7 @@ public class DailyReports extends AppCompatActivity {
                         String Plantcode = str_plancode;
 //                        Toast.makeText(view.getContext(), filterDate, Toast.LENGTH_SHORT).show();
                         loading[0].setVisibility(View.VISIBLE);
-                        weekly_persons_entrance(filterDate,filterDate,Plantcode);
+                        weekly_persons_entrance(Plantcode);
                     }
 
                 }
@@ -303,15 +251,15 @@ public class DailyReports extends AppCompatActivity {
 //                    Toast.makeText(getApplicationContext(), plantcode, Toast.LENGTH_SHORT).show();
 
                     Date date = new Date();
-                    CharSequence default_to = DateFormat.format("MMMM dd, yyyy", date.getTime());
-                    CharSequence default_from = DateFormat.format("MMMM dd, yyyy", date.getTime());
-                    CharSequence default_to_1st = DateFormat.format("MMMM dd, yyyy", date.getTime());
-                    CharSequence default_from_last = DateFormat.format("MMMM dd, yyyy", date.getTime());
+                    CharSequence default_to = DateFormat.format("MMMM, yyyy", date.getTime());
+                    CharSequence default_from = DateFormat.format("MMMM, yyyy", date.getTime());
+                    CharSequence default_to_1st = DateFormat.format("MMMM, yyyy", date.getTime());
+                    CharSequence default_from_last = DateFormat.format("MMMM, yyyy", date.getTime());
                     //default
                     DataTemp(default_to.toString(),default_from.toString(),plantcode);
                     report_person(default_to.toString(),default_from.toString(),plantcode);
-                    weekly_persons_entrance(default_to_1st.toString(),default_from_last.toString(),plantcode);
-                    Daily_people_Entrance_province(default_to_1st.toString(),default_from_last.toString(),plantcode);
+                    weekly_persons_entrance(plantcode);
+                    Monthly_people_Entrance_province(default_to_1st.toString(),default_from_last.toString(),plantcode);
                     EntranceGroup(default_to.toString(),default_from.toString(),plantcode);
                     EntrancAgency(default_to.toString(),default_from.toString(),plantcode);
 
@@ -340,7 +288,7 @@ public class DailyReports extends AppCompatActivity {
             groupPercent.clear();
             groupPercentvalue.clear();
             groupTotal.clear();
-            API.getClient().entranceReports(to,from,plantcode).enqueue(new Callback<Object>() {
+            API.getClient().month_entrance_group(to,from,plantcode).enqueue(new Callback<Object>() {
 
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
@@ -466,7 +414,7 @@ public class DailyReports extends AppCompatActivity {
             agencyPercent.clear();
             agencyPercentvalue.clear();
             agencytotal.clear();
-            API.getClient().AgencyReports(to,from,plantcode).enqueue(new Callback<Object>() {
+            API.getClient().month_entrance_agency(to,from,plantcode).enqueue(new Callback<Object>() {
 
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
@@ -486,7 +434,7 @@ public class DailyReports extends AppCompatActivity {
                                 JSONObject object = array.getJSONObject(i);
                                 String string = object.getString("group");
                                 double percent = object.getDouble("percent");
-                                int total = object.getInt("total");
+                                int total = object.getInt("Total");
                                 agencyPercent.add(string);
                                 agencyPercentvalue.add(percent);
                                 agencytotal.add(total);
@@ -591,74 +539,92 @@ public class DailyReports extends AppCompatActivity {
         cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         cal.set(Calendar.DAY_OF_WEEK_IN_MONTH, postion);
 
-       return DateFormat.format("MMMM dd,",cal.getTime());
+        return DateFormat.format("MMMM dd, yyyy ",cal.getTime());
     }
 
 
-    public void weekly_persons_entrance(String to,String from,String plantcode){
+    public void weekly_persons_entrance(String plantcode){
 
         Handler handler = new Handler();
-
+        month.clear();
+        Monthlyvalue.clear();
         handler.post(() -> {
-            AxisTop.clear();
-            AxisBottom.clear();
-            values.clear();
-
-            API.getClient().report_weekly_person_entrance(to,from,plantcode).enqueue(new Callback<Object>() {
+            API.getClient().monthly_person_entrance(plantcode).enqueue(new Callback<Object>() {
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
                     try {
                         JSONObject jsonObject = new JSONObject(new Gson().toJson(response.body()));
                         Boolean success = jsonObject.getBoolean("success");
-                        int week_position = jsonObject.getInt("week_position");
-                        int count = jsonObject.getInt("count");
-                        int max = jsonObject.getInt("max");
                         JSONArray array = jsonObject.getJSONArray("data");
 
 
                         if(success){
-                            // weeks.setSelection(week_position-1);
                             loading[0].setVisibility(View.GONE);
-                            List<Line> lines = new ArrayList<>();
-                            for (int i = 0; i < 1; ++i) {
-
-                                for (int j = 0; j < array.length(); j++) {
-                                    JSONObject object = array.getJSONObject(j);
-                                    AxisTop.add(new AxisValue(j).setLabel(weeekly_weeks[j]));
-                                    AxisBottom.add(new AxisValue(j).setLabel(object.getString("day") + "    "));
-                                    values.add(new PointValue(j, (float) object.getInt("total")));
-                                }
-
-                                Line line = new Line(values);
-                                line.setColor(ChartUtils.COLOR_GREEN);
-                                line.setCubic(false);
-                                line.setHasLabels(true);
-                                line.setHasLines(true);
-                                line.setHasPoints(true);
-                                lines.add(line);
-
-                                LineChartData lineData = new LineChartData(lines);
-                                lineData.setAxisXBottom(new Axis(AxisBottom).setHasLines(false).setMaxLabelChars(0));
-                                lineData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(3));
-                                lineData.setAxisXTop(new Axis(AxisTop).setHasLines(false).setMaxLabelChars(0));
-                                lineData.getAxisYLeft().setTextColor(Color.parseColor("#2c3e50"));
-                                lineData.getAxisXBottom().setTextColor(Color.parseColor("#2c3e50"));
-                                lineData.getAxisXTop().setTextColor(Color.parseColor("#2c3e50"));
-                                lineData.getAxisXTop().setTextSize(10);
-                                lineData.getAxisXBottom().setTextSize(10);
-                                weeklyLine.setLineChartData(lineData);
-                                weeklyLine.setViewportCalculationEnabled(true);
-                                Viewport viewport = new Viewport(100.0f, (float) count , 100.0f, 100.0f);
-                                weeklyLine.setMaximumViewport(viewport);
-                                weeklyLine.setCurrentViewport(viewport);
-                                weeklyLine.setZoomType(ZoomType.HORIZONTAL);
-                                weeklyLine.cancelDataAnimation();
-                                line.setColor(Color.parseColor("#27ae60"));
-                                for (PointValue next : lineData.getLines().get(0).getValues()) {
-                                    next.setTarget(next.getX(), next.getY());
-                                }
-                                weeklyLine.startDataAnimation(100);
+                            for (int j = 0; j < array.length(); j++) {
+                                JSONObject object = array.getJSONObject(j);
+                                float f_total = object.getInt("value");
+                                month.add(object.getString("month"));
+                                Monthlyvalue.add(f_total);
                             }
+
+                            List<AxisValue> label = new ArrayList();
+                            List<Column> columnListData = new ArrayList();
+                            List<Column> subcolumn = new ArrayList();
+                            List<AxisValue> axisValues = new ArrayList();
+                            for (int i = 0; i <  array.length(); i++) {
+                                List<SubcolumnValue> subcolumnValues = new ArrayList();
+                                for (int j = 0; j < 1; j++) {
+                                    subcolumnValues.add(new SubcolumnValue(Monthlyvalue.get(i).intValue(), Color(i)));
+                                    axisValues.add(new AxisValue(Monthlyvalue.get(i).intValue()));
+                                     label.add(new AxisValue((float) i).setLabel(month.get(i)));
+                                }
+
+                                SimpleColumnChartValueFormatter formatter = new SimpleColumnChartValueFormatter();
+//                                formatter.setDecimalSeparator(',');
+//                                formatter.setDecimalDigitsNumber(-3);
+//                                formatter.setPrependedText(new char[]{'$'});
+//                                formatter.setAppendedText(new char[]{'k'});
+
+                                label.add(new AxisValue((float) i).setLabel(month.get(i)));
+                                subcolumn.add(new Column(subcolumnValues));
+                                Column column = new Column(subcolumnValues);
+                                column.update(10.0f);
+                                column.setHasLabels(true);
+                                column.setHasLabelsOnlyForSelected(false).setFormatter(formatter);
+                                column.setFormatter(formatter);
+                                columnListData.add(column);
+                            }
+
+
+
+
+                            ColumnChartData columnData = new ColumnChartData(columnListData);
+                            columnData.setAxisXBottom(new Axis(label).setHasLines(false).setMaxLabelChars(3));
+                            columnData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(3));
+                            columnData.setStacked(false);
+                            columnData.setValueLabelBackgroundAuto(true);
+                            columnData.setValueLabelBackgroundEnabled(true);
+                            columnData.getAxisYLeft().setTextColor(Color.parseColor("#2c3e50"));
+                            columnData.getAxisXBottom().setTextColor(Color.parseColor("#2c3e50"));
+                            columnData.getAxisXBottom().setTextSize(14);
+                            columnData.setValueLabelTextSize(14);
+                            columnData.setValueLabelsTextColor(Color.parseColor("#ffffff"));
+                            columnData.setValueLabelBackgroundColor(Color.parseColor("#2c3e50"));
+                            columnData.setValueLabelBackgroundEnabled(true);
+                            columnData.setAxisXTop(new Axis(label).setHasLines(false).setMaxLabelChars(0));
+                            columnData.getAxisXTop().setTextColor(Color.parseColor("#2c3e50"));
+                            columnData.getAxisXTop().setTextSize(14);
+                            columnData.setValueLabelTextSize(14);
+                            columnData.setValueLabelsTextColor(Color.parseColor("#ffffff"));
+                            columnData.setValueLabelBackgroundColor(Color.parseColor("#2c3e50"));
+                            monthly_person_entrance.setZoomEnabled(true);
+                            monthly_person_entrance.setColumnChartData(columnData);
+                            monthly_person_entrance.setValueSelectionEnabled(true);
+                            monthly_person_entrance.setViewportCalculationEnabled(false);
+                            monthly_person_entrance.setZoomType(ZoomType.HORIZONTAL);
+
+
+
                         }
                         else{
                             loading[0].setAnimation(R.raw.no_connection);
@@ -681,14 +647,14 @@ public class DailyReports extends AppCompatActivity {
 
 
     }
-    public void Daily_people_Entrance_province(String to,String from, String plantcode){
+    public void Monthly_people_Entrance_province(String to, String from, String plantcode){
 
         Handler handler = new Handler();
 
         handler.post(() -> {
             province.clear();
             provinceTotal.clear();
-            API.getClient().Daily_people_entrance_province(to,from,plantcode).enqueue(new Callback<Object>() {
+            API.getClient().Monthly_people_entrance_province_report(to,from,plantcode).enqueue(new Callback<Object>() {
                 @Override
                 public void onResponse(Call<Object> call, Response<Object> response) {
 
@@ -788,12 +754,64 @@ public class DailyReports extends AppCompatActivity {
     }
     private void DateRange(){
         dateRange[0].setOnClickListener(v -> {
-            CalendarPopup();
+            new MonthPickerDialog.Builder(this, (Month, Year) -> {
+                String FilterDateTo = monthName[Month] + ", " + Year;
+                String FilterDateFrom = dateRange[1].getText().toString();
+                String plantcode = str_plancode;
+                dateRange[0].setText(FilterDateTo);
+
+                DataTemp(FilterDateTo,FilterDateFrom,plantcode);
+                report_person(FilterDateTo,FilterDateFrom,plantcode);
+                Monthly_people_Entrance_province(FilterDateTo,FilterDateFrom,plantcode);
+                EntranceGroup(FilterDateTo,FilterDateFrom,plantcode);
+                EntrancAgency(FilterDateTo,FilterDateFrom,plantcode);
+
+
+            }, today.get(Calendar.YEAR),today.get(Calendar.MONTH))
+                    .setActivatedMonth(today.get(Calendar.MONTH))
+                    .setMinYear(2021)
+                    .setActivatedYear(today.get(Calendar.YEAR))
+                    .setMaxYear(today.get(Calendar.YEAR))
+                    .setMinMonth(Calendar.MONTH)
+                    .setTitle("Select month")
+                    .setMonthRange(0, 11)
+                    .setOnMonthChangedListener(i -> {
+
+                    })
+                    .setOnYearChangedListener(i -> {
+
+                    }).build().show();
 
         });
 
         dateRange[1].setOnClickListener(v -> {
-            CalendarPopup();
+            new MonthPickerDialog.Builder(this, (Month, Year) -> {
+                String FilterDateFrom = monthName[Month] + ", " + Year;
+                String FilterDateTo = dateRange[0].getText().toString();
+                String plantcode = str_plancode;
+                dateRange[1].setText(FilterDateFrom);
+
+                DataTemp(FilterDateTo,FilterDateFrom,plantcode);
+                report_person(FilterDateTo,FilterDateFrom,plantcode);
+                Monthly_people_Entrance_province(FilterDateTo,FilterDateFrom,plantcode);
+                EntranceGroup(FilterDateTo,FilterDateFrom,plantcode);
+                EntrancAgency(FilterDateTo,FilterDateFrom,plantcode);
+
+
+            }, today.get(Calendar.YEAR),today.get(Calendar.MONTH))
+                    .setActivatedMonth(today.get(Calendar.MONTH))
+                    .setMinYear(2021)
+                    .setActivatedYear(today.get(Calendar.YEAR))
+                    .setMaxYear(today.get(Calendar.YEAR))
+                    .setMinMonth(Calendar.MONTH)
+                    .setTitle("Select month")
+                    .setMonthRange(0, 11)
+                    .setOnMonthChangedListener(i -> {
+
+                    })
+                    .setOnYearChangedListener(i -> {
+
+                    }).build().show();
         });
 
     }
@@ -801,7 +819,7 @@ public class DailyReports extends AppCompatActivity {
     @BindViews({R.id.avg,R.id.highest,R.id.lowest})
     TextView[] temp;
     private void DataTemp(String start,String end,String plantcode){
-        API.getClient().Temp(start,end,plantcode).enqueue(new Callback<Object>() {
+        API.getClient().Temp_monthly(start,end,plantcode).enqueue(new Callback<Object>() {
 
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
@@ -836,10 +854,10 @@ public class DailyReports extends AppCompatActivity {
     }
 
     @BindViews({R.id.total_entry,R.id.total_person,R.id.total_entry_avg,R.id.trucking,R.id.agency,R.id.visitor,R.id.employee,R.id.male,R.id.avg_male_age,R.id.max_age,
-    R.id.female,R.id.female_avg_age,R.id.female_max_age})
+            R.id.female,R.id.female_avg_age,R.id.female_max_age})
     TextView[] person;
     private void report_person(String start,String end,String plantcode){
-        API.getClient().report_person(start,end,plantcode).enqueue(new Callback<Object>() {
+        API.getClient().report_person_monthly(start,end,plantcode).enqueue(new Callback<Object>() {
 
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
@@ -884,58 +902,27 @@ public class DailyReports extends AppCompatActivity {
     }
 
 
-    private void CalendarPopup(){
-        AlertDialog.Builder dialog = new AlertDialog.Builder(DailyReports.this);
-        View vs = LayoutInflater.from(DailyReports.this).inflate(R.layout.modal_date_range, null);
-        calendar = vs.findViewById(R.id.calendar);
-        calendarOk = vs.findViewById(R.id.ok);
-        init(calendar);
 
-
-
-        dialog.setView(vs);
-        AlertDialog alert = dialog.create();
-        calendarOk.setOnClickListener(v -> {
-            String to = str_toSelected.toString();
-            String from = str_fromSelected.toString();
-            String plantcode = str_plancode;
-
-//            Toast.makeText(getApplicationContext(), to + " " + from + " " + plantcode, Toast.LENGTH_SHORT).show();
-
-            DataTemp(to,from,plantcode);
-            report_person(to,from,plantcode);
-            weekly_persons_entrance(to,from,plantcode);
-            Daily_people_Entrance_province(to,from,plantcode);
-            EntranceGroup(to,from,plantcode);
-            EntrancAgency(to,from,plantcode);
-
-            alert.dismiss();
-        });
-        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        alert.setCanceledOnTouchOutside(false);
-        alert.setCancelable(true);
-        alert.show();
-    }
-
-    void init(DateRangeCalendarView calendar){
-        calendar.setCalendarListener(new CalendarListener() {
-            @Override
-            public void onFirstDateSelected(@NonNull Calendar calendar) {
+//
+//    void init(DateRangeCalendarView calendar){
+//        calendar.setCalendarListener(new CalendarListener() {
+//            @Override
+//            public void onFirstDateSelected(@NonNull Calendar calendar) {
+////                calendarOk.setEnabled(true);
+////                str_toSelected = DateFormat.format("MMMM dd, yyyy ", calendar.getTime());
+////                str_fromSelected = DateFormat.format("MMMM dd, yyyy ", calendar.getTime());
+//            }
+//
+//            @Override
+//            public void onDateRangeSelected(@NonNull Calendar calendar, @NonNull Calendar calendar1) {
 //                calendarOk.setEnabled(true);
 //                str_toSelected = DateFormat.format("MMMM dd, yyyy ", calendar.getTime());
-//                str_fromSelected = DateFormat.format("MMMM dd, yyyy ", calendar.getTime());
-            }
-
-            @Override
-            public void onDateRangeSelected(@NonNull Calendar calendar, @NonNull Calendar calendar1) {
-                calendarOk.setEnabled(true);
-                str_toSelected = DateFormat.format("MMMM dd, yyyy ", calendar.getTime());
-                str_fromSelected = DateFormat.format("MMMM dd, yyyy ", calendar1.getTime());
-                dateRange[0].setText(DateFormat.format("MMMM dd, yyyy ", calendar.getTime()));
-                dateRange[1].setText(DateFormat.format("MMMM dd, yyyy ", calendar1.getTime()));
-            }
-        });
-    }
+//                str_fromSelected = DateFormat.format("MMMM dd, yyyy ", calendar1.getTime());
+//                dateRange[0].setText(DateFormat.format("MMMM dd, yyyy ", calendar.getTime()));
+//                dateRange[1].setText(DateFormat.format("MMMM dd, yyyy ", calendar1.getTime()));
+//            }
+//        });
+//    }
 
 
 
@@ -990,7 +977,7 @@ public class DailyReports extends AppCompatActivity {
                     str_plancode = buID.get(indexOf);
                     DataTemp(to,from,buID.get(indexOf));
                     report_person(to,from,buID.get(indexOf));
-                    Daily_people_Entrance_province(to,from,buID.get(indexOf));
+                    Monthly_people_Entrance_province(to,from,buID.get(indexOf));
                     EntranceGroup(to,from,buID.get(indexOf));
                     EntrancAgency(to,from,buID.get(indexOf));
                     // Toast.makeText(view.getContext(), buID.get(indexOf) + " " + dateRange[0].getText().toString() + " " + dateRange[1].getText().toString(), Toast.LENGTH_SHORT).show();

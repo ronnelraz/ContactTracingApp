@@ -3,9 +3,12 @@ package com.example.contacttracingapp.retroConfig;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 public interface APIInterface {
+
+
     @FormUrlEncoded
     @POST("login")
     Call<Object> LOGIN(@Field("username") String username, @Field("password") String password);
@@ -111,9 +114,73 @@ public interface APIInterface {
                       @Field("plantcode") String plantcode);
 
     @FormUrlEncoded
+    @POST("report_temp_m")
+    Call<Object> Temp_monthly(@Field("start") String start,
+                      @Field("end") String end,
+                      @Field("plantcode") String plantcode);
+
+    @FormUrlEncoded
     @POST("report_person")
     Call<Object> report_person(@Field("start") String start,
                       @Field("end") String end,
                       @Field("plantcode") String plantcode);
+
+
+    @FormUrlEncoded
+    @POST("report_person_m")
+    Call<Object> report_person_monthly(@Field("start") String start,
+                               @Field("end") String end,
+                               @Field("plantcode") String plantcode);
+
+    @FormUrlEncoded
+    @POST("report_weekly_person_entrance")
+    Call<Object> report_weekly_person_entrance(@Field("to") String start,
+                               @Field("from") String end,
+                               @Field("plantcode") String plantcode);
+
+    @FormUrlEncoded
+    @POST("Daily_people_entrance_province")
+    Call<Object> Daily_people_entrance_province(@Field("to") String start,
+                                               @Field("from") String end,
+                                               @Field("plantcode") String plantcode);
+
+    @FormUrlEncoded
+    @POST("entranceReports")
+    Call<Object> entranceReports(@Field("start") String start,
+                                                @Field("end") String end,
+                                                @Field("plantcode") String plantcode);
+
+    @FormUrlEncoded
+    @POST("AgencyReports")
+    Call<Object> AgencyReports(@Field("start") String start,
+                                 @Field("end") String end,
+                                 @Field("plantcode") String plantcode);
+
+
+    @FormUrlEncoded
+    @POST("month_entrance_group")
+    Call<Object> month_entrance_group(@Field("start") String start,
+                               @Field("end") String end,
+                               @Field("plantcode") String plantcode);
+
+    @FormUrlEncoded
+    @POST("month_entrance_agency")
+    Call<Object> month_entrance_agency(@Field("start") String start,
+                                      @Field("end") String end,
+                                      @Field("plantcode") String plantcode);
+
+
+
+    @FormUrlEncoded
+    @POST("monthly_person_entrance")
+    Call<Object> monthly_person_entrance(@Field("plantcode") String plantcode);
+
+
+    @FormUrlEncoded
+    @POST("Monthly_people_entrance_province_report")
+    Call<Object> Monthly_people_entrance_province_report(@Field("to") String start,
+                                                @Field("from") String end,
+                                                @Field("plantcode") String plantcode);
+
 
 }

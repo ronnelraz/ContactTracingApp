@@ -4,10 +4,9 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-
-        maven {
-            url 'https://jitpack.io'
-        }
+        jcenter()
+        maven { url "https://jitpack.io" }
+        maven { url "https://maven.google.com" }
 
     }
     dependencies {
@@ -18,7 +17,6 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
-
 
 
 task clean(type: Delete) {

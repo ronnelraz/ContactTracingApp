@@ -69,6 +69,7 @@
                 android:iconTint="@color/black"
                 app:showAsAction="never"/>
             <item
+                android:id="@+id/monthly"
                 android:title="Monthly Reports"
                 android:icon="@drawable/report"
                 android:iconTint="@color/black"

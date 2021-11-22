@@ -17,4 +17,19 @@
     <style name="picker" parent="ThemeOverlay.MaterialComponents.TimePicker">
         <item name="colorAccent">@color/purple_500</item>
     </style>
+
+    <style name="MonthPickerDialogStyle" >
+        <item name="monthBgColor">@color/button_text_color</item>
+        <item name="monthBgSelectedColor">#689F38</item>
+        <item name="monthFontColorSelected">#FFFFFF</item>
+        <item name="monthFontColorNormal">@color/material_blue_grey_90</item>
+        <item name="monthFontColorDisabled">@color/material_blue_grey_90</item>
+
+        <item name="headerBgColor">@color/purple_500</item>
+        <item name="headerFontColorSelected">#fff</item>
+        <item name="headerFontColorNormal">#85FFFFFF</item>
+        <item name="headerTitleColor">#fff</item>
+
+        <item name="dialogActionButtonColor">@color/purple_500</item>
+    </style>
 </resources>

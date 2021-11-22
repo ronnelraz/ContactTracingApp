@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.TooltipCompat;
+import androidx.core.content.ContextCompat;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.AuthFailureError;
@@ -28,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.google.android.material.button.MaterialButton;
 import com.novoda.merlin.Merlin;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import butterknife.BindViews;
@@ -44,6 +47,7 @@ public class function {
     public BluetoothAdapter mBluetoothAdapter;
     public BluetoothDevice mBluetoothDevice;
     public BluetoothSocket mBluetoothSocket;
+
 
     public static String[] BLUETOOTH = {"iMZ220-A", "iMZ220-B"};
 
@@ -68,8 +72,6 @@ public class function {
 
 
 
-
-
     public String getBTAddress(){
         sharedPreferences = cont.getSharedPreferences(DATA, Context.MODE_PRIVATE);
         return sharedPreferences.getString(BLUETOOTHADDRESS,"");
@@ -88,6 +90,12 @@ public class function {
     public String getAREACODE(){
         sharedPreferences = cont.getSharedPreferences(DATA, Context.MODE_PRIVATE);
         return sharedPreferences.getString(SET_SHORTCODE,"");
+    }
+
+
+
+    public String formatter(String str) {
+        return new DecimalFormat("#,###,###").format((long) Integer.parseInt(str));
     }
 
     public static synchronized function getInstance(Context context){

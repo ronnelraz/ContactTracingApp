@@ -1,0 +1,1143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Monthly">
+
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:title="Monthly Report"
+            app:titleTextColor="@color/white"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/swipe">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Spinner
+                    android:layout_margin="5dp"
+                    style="@style/DropDown_PowerSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:id="@+id/bu"/>
+
+
+                <LinearLayout
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/black"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="Date To"
+                        android:layout_marginRight="25dp"/>
+
+                    <TextView
+                        android:textColor="@color/black"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="Date From"/>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <EditText
+                        android:id="@+id/to"
+                        android:clickable="true"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:layout_marginRight="10dp"
+                        android:backgroundTint="#D5E1ED"
+                        android:background="@drawable/rounded"
+                        android:textColor="@color/black"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        tools:text="September 17, 2021"
+                        android:drawableLeft="@drawable/icons8_calendar_1"
+                        android:drawablePadding="5dp"
+                        android:drawableTint="@color/purple_500"
+                        android:textSize="15sp"/>
+
+                    <EditText
+                        android:id="@+id/from"
+                        android:clickable="true"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:backgroundTint="#D5E1ED"
+                        android:background="@drawable/rounded"
+                        android:textColor="@color/black"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        tools:text="September 17, 2021"
+                        android:drawableLeft="@drawable/icons8_calendar_1"
+                        android:drawablePadding="5dp"
+                        android:drawableTint="@color/purple_500"
+                        android:textSize="15sp"/>
+
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:src="@drawable/temperature"
+                        android:layout_height="75dp"/>
+
+
+                    <TextView
+                        android:id="@+id/avg"
+                        android:gravity="center"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/material_blue_grey_90"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:text="-- \n AVG"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="25dp"/>
+
+
+                    <View
+                        android:layout_gravity="center"
+                        android:layout_width="1dp"
+                        android:layout_height="50dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/black"/>
+
+                    <TextView
+                        android:id="@+id/highest"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="-- \nHighest"
+                        android:layout_marginRight="25dp"/>
+
+                    <View
+                        android:layout_gravity="center"
+                        android:layout_width="1dp"
+                        android:layout_height="50dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/black"/>
+
+                    <TextView
+                        android:id="@+id/lowest"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/purple_500"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="-- \nLowest"
+                        android:layout_marginRight="25dp"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginRight="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:scaleType="fitCenter"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:src="@drawable/entrance_persons"
+                        android:layout_height="65dp"/>
+
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:orientation="vertical"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/total_entry"
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:textColor="@color/material_blue_grey_90"
+                            android:layout_width="match_parent"
+                            android:text="--"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="10sp"
+                            android:textColor="@color/material_blue_grey_90"
+                            android:layout_width="match_parent"
+                            android:text="Total of Entry"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+
+                    <View
+                        android:layout_gravity="center"
+                        android:layout_width="1dp"
+                        android:layout_height="50dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/black"/>
+
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:orientation="vertical"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/total_person"
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:textColor="@color/material_blue_grey_90"
+                            android:layout_width="match_parent"
+                            android:text="--"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="10sp"
+                            android:textColor="@color/material_blue_grey_90"
+                            android:layout_width="match_parent"
+                            android:text="Total Person"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_gravity="center"
+                        android:layout_width="1dp"
+                        android:layout_height="50dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/black"/>
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:orientation="vertical"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/total_entry_avg"
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:textColor="@color/material_blue_grey_90"
+                            android:layout_width="match_parent"
+                            android:text="--"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="10sp"
+                            android:textColor="@color/material_blue_grey_90"
+                            android:layout_width="match_parent"
+                            android:text="AVG Number Entry"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:src="@drawable/trucking"/>
+
+                        <TextView
+                            android:id="@+id/trucking"
+                            android:textAlignment="center"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"/>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:src="@drawable/agency"/>
+
+                        <TextView
+                            android:id="@+id/agency"
+                            android:textAlignment="center"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"/>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:src="@drawable/visitor"/>
+
+                        <TextView
+                            android:id="@+id/visitor"
+                            android:textAlignment="center"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"/>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:src="@drawable/employee_img"/>
+
+                        <TextView
+                            android:id="@+id/employee"
+                            android:textAlignment="center"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"/>
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:src="@drawable/ic_man"
+                        android:layout_height="100dp"/>
+
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:orientation="vertical"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/male"
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:layout_width="match_parent"
+                            android:text="--"
+                            android:textColor="#3196eb"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Persons"
+                            android:textAlignment="center"
+                            android:textColor="#3196eb"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+
+                    <View
+                        android:layout_gravity="center"
+                        android:layout_width="1dp"
+                        android:layout_height="50dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/black"/>
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:orientation="vertical"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/avg_male_age"
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:layout_width="match_parent"
+                            android:text="--"
+                            android:textColor="#3196eb"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:layout_width="match_parent"
+                            android:text="AVG Age"
+                            android:textColor="#3196eb"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_gravity="center"
+                        android:layout_width="1dp"
+                        android:layout_height="50dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/black"/>
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:orientation="vertical"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/max_age"
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:layout_width="match_parent"
+                            android:text="--"
+                            android:textColor="#3196eb"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:layout_width="match_parent"
+                            android:text="Max Age"
+                            android:textColor="#3196eb"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:src="@drawable/ic_girl"
+                        android:layout_height="100dp"/>
+
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:orientation="vertical"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/female"
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:layout_width="match_parent"
+                            android:text="--"
+                            android:textColor="#FBC02D"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Persons"
+                            android:textAlignment="center"
+                            android:textColor="#FBC02D"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+
+                    <View
+                        android:layout_gravity="center"
+                        android:layout_width="1dp"
+                        android:layout_height="50dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/black"/>
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:orientation="vertical"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/female_avg_age"
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:layout_width="match_parent"
+                            android:text="--"
+                            android:textColor="#FBC02D"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="AVG Age"
+                            android:textAlignment="center"
+                            android:textColor="#FBC02D"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_gravity="center"
+                        android:layout_width="1dp"
+                        android:layout_height="50dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/black"/>
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:orientation="vertical"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/female_max_age"
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:layout_width="match_parent"
+                            android:text="--"
+                            android:textColor="#FBC02D"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Max Age"
+                            android:textAlignment="center"
+                            android:textColor="#FBC02D"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_margin="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:textStyle="bold"
+                            android:textSize="19sp"
+                            android:drawablePadding="5dp"
+                            android:gravity="center|left"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Monthly Person Entrance"
+                            android:drawableLeft="@drawable/ic_bar_chart"/>
+
+                        <LinearLayout
+                            android:visibility="gone"
+                            android:layout_marginTop="10dp"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+
+                            <TextView
+                                android:visibility="gone"
+                                android:layout_marginLeft="5dp"
+                                android:textColor="@color/gray_btn_bg_pressed_color"
+                                android:layout_weight="1"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:text="Select Month"
+                                android:layout_marginRight="11dp"/>
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:visibility="gone"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+
+                            <Spinner
+                                android:id="@+id/month"
+                                android:layout_marginRight="10dp"
+                                android:layout_weight="1"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"/>
+
+
+                        </LinearLayout>
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <lecho.lib.hellocharts.view.ColumnChartView
+
+                                android:id="@+id/monthly_person_entrance"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:paddingLeft="20dp"
+                                android:layout_marginBottom="15dp" />
+
+
+                            <com.airbnb.lottie.LottieAnimationView
+                                android:id="@+id/loading1"
+                                android:layout_width="150dp"
+                                android:layout_height="150dp"
+                                android:layout_centerInParent="true"
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/loading"
+                                app:lottie_renderMode="automatic" />
+                        </RelativeLayout>
+
+
+
+
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_margin="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:textStyle="bold"
+                            android:textSize="19sp"
+                            android:drawablePadding="5dp"
+                            android:gravity="center|left"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Monthly People Entrance (By Province)"
+                            android:drawableLeft="@drawable/ic_bar_chart"/>
+
+
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <lecho.lib.hellocharts.view.ColumnChartView
+                                android:layout_margin="15dp"
+                                android:id="@+id/dailyEntranceProvince"
+                                android:layout_width="match_parent"
+                                android:layout_height="500dp" />
+
+                            <View
+                                android:id="@+id/vi"
+                                android:layout_below="@+id/dailyEntranceProvince"
+                                android:layout_width="match_parent"
+                                android:layout_height="2dp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@android:color/darker_gray" />
+
+                            <lecho.lib.hellocharts.view.PreviewColumnChartView
+                                android:layout_margin="5dp"
+                                android:layout_below="@+id/vi"
+                                android:id="@+id/chart_preview"
+                                android:layout_width="match_parent"
+                                android:layout_height="90dp"/>
+
+
+                            <com.airbnb.lottie.LottieAnimationView
+                                android:id="@+id/loading2"
+                                android:layout_width="150dp"
+                                android:layout_height="150dp"
+                                android:layout_centerInParent="true"
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/loading"
+                                app:lottie_renderMode="automatic" />
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_margin="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:textStyle="bold"
+                            android:textSize="19sp"
+                            android:drawablePadding="5dp"
+                            android:gravity="center|left"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="% Entrance Group"
+                            android:drawableLeft="@drawable/ic_graph"/>
+
+
+
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <lecho.lib.hellocharts.view.PieChartView
+                                android:layout_margin="15dp"
+                                android:id="@+id/EntrannceGroup"
+                                android:layout_width="match_parent"
+                                android:layout_height="500dp" />
+
+
+                            <LinearLayout
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginTop="-60dp"
+                                android:layout_below="@+id/EntrannceGroup"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:id="@+id/entranceGroupDetails">
+
+                                <TextView
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="% Entrance Group"/>
+
+                                <TextView
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:gravity="right"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Total"/>
+
+
+                                <TextView
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:gravity="right"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Percent (%)"/>
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_marginTop="10dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/entranceGroupDetails"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_weight="1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:paddingTop="20dp"
+                                        android:paddingBottom="20dp"
+                                        android:layout_weight="1"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:id="@+id/groupEntranceColor"/>
+
+                                    <LinearLayout
+                                        android:paddingTop="20dp"
+                                        android:paddingBottom="20dp"
+                                        android:layout_weight="3"
+                                        android:layout_width="10dp"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:id="@+id/groupEntranceTitle"/>
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:paddingTop="20dp"
+                                    android:paddingBottom="20dp"
+                                    android:layout_weight="1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:id="@+id/groupEntranceTotal"/>
+
+                                <LinearLayout
+                                    android:paddingTop="20dp"
+                                    android:paddingBottom="20dp"
+                                    android:layout_weight="1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:id="@+id/groupEntrancePercent"/>
+
+                            </LinearLayout>
+
+
+                            <com.airbnb.lottie.LottieAnimationView
+                                android:id="@+id/loading3"
+                                android:layout_width="150dp"
+                                android:layout_height="150dp"
+                                android:layout_centerInParent="true"
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/loading"
+                                app:lottie_renderMode="automatic" />
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_margin="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:textStyle="bold"
+                            android:textSize="19sp"
+                            android:drawablePadding="5dp"
+                            android:gravity="center|left"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="% Agency"
+                            android:drawableLeft="@drawable/ic_graph"/>
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <lecho.lib.hellocharts.view.PieChartView
+                                android:layout_margin="15dp"
+                                android:id="@+id/Agency"
+                                android:layout_width="match_parent"
+                                android:layout_height="500dp" />
+
+
+                            <LinearLayout
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginTop="-60dp"
+                                android:layout_below="@+id/Agency"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:id="@+id/AgencyDetails">
+
+                                <TextView
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="% Agency"/>
+
+                                <TextView
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:gravity="right"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Total"/>
+
+
+                                <TextView
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:gravity="right"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Percent (%)"/>
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_marginTop="5dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/AgencyDetails"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_weight="1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:paddingTop="20dp"
+                                        android:paddingBottom="20dp"
+                                        android:layout_weight="1"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:id="@+id/agencyColor"/>
+
+                                    <LinearLayout
+                                        android:paddingTop="20dp"
+                                        android:paddingBottom="20dp"
+                                        android:layout_weight="3"
+                                        android:layout_width="10dp"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:id="@+id/agencyTitle"/>
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:paddingTop="20dp"
+                                    android:paddingBottom="20dp"
+                                    android:layout_weight="1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:id="@+id/agencyTotal"/>
+
+                                <LinearLayout
+                                    android:paddingTop="20dp"
+                                    android:paddingBottom="20dp"
+                                    android:layout_weight="1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:id="@+id/agencyPercent"/>
+
+                            </LinearLayout>
+
+
+                            <com.airbnb.lottie.LottieAnimationView
+                                android:id="@+id/loading4"
+                                android:layout_width="150dp"
+                                android:layout_height="150dp"
+                                android:layout_centerInParent="true"
+                                app:lottie_autoPlay="true"
+                                app:lottie_loop="true"
+                                app:lottie_rawRes="@raw/loading"
+                                app:lottie_renderMode="automatic" />
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+
+
+
+            </LinearLayout>
+
+
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
+</LinearLayout>

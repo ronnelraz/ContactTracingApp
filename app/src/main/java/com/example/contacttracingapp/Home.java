@@ -17,6 +17,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -250,51 +251,53 @@ public class Home extends AppCompatActivity {
     }
 
     protected void getallScanned(){
-        list.clear();
-        API.getClient().ScannedPerson().enqueue(new Callback<Object>() {
-            @Override
-            public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
-                try {
-                    JSONObject jsonResponse = new JSONObject(new Gson().toJson(response.body()));
-                    boolean success = jsonResponse.getBoolean("success");
-                    JSONArray array = jsonResponse.getJSONArray("data");
-                    if(success){
-                        loading.setVisibility(View.GONE);
-                        for (int i = 0; i < array.length(); i++) {
-                            JSONObject object = array.getJSONObject(i);
+        Handler handler = new Handler();
+        handler.post(() -> {
+            list.clear();
+            API.getClient().ScannedPerson().enqueue(new Callback<Object>() {
+                @Override
+                public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(new Gson().toJson(response.body()));
+                        boolean success = jsonResponse.getBoolean("success");
+                        JSONArray array = jsonResponse.getJSONArray("data");
+                        if(success){
+                            loading.setVisibility(View.GONE);
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject object = array.getJSONObject(i);
 
-                            gs_scanned_all item = new gs_scanned_all(
-                                    object.getString("type"),
-                                    object.getString("name"),
-                                    object.getString("temp"),
-                                    object.getString("dt"),
-                                    object.getString("cn"),
-                                    object.getString("vaccinated")
-                            );
+                                gs_scanned_all item = new gs_scanned_all(
+                                        object.getString("type"),
+                                        object.getString("name"),
+                                        object.getString("temp"),
+                                        object.getString("dt"),
+                                        object.getString("cn"),
+                                        object.getString("vaccinated")
+                                );
 
-                            list.add(item);
+                                list.add(item);
+                            }
+
+                            adapter = new Adapter_scanned(list,getApplicationContext());
+                            recyclerView.setAdapter(adapter);
                         }
 
-                        adapter = new Adapter_scanned(list,getApplicationContext());
-                        recyclerView.setAdapter(adapter);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Object> call, Throwable t) {
-                if (t instanceof IOException) {
-                    function.getInstance(getApplicationContext()).toastip(R.raw.error_con,t.getMessage());
-                    loading.setVisibility(View.VISIBLE);
-                    no_connection();
+                @Override
+                public void onFailure(Call<Object> call, Throwable t) {
+                    if (t instanceof IOException) {
+                        function.getInstance(getApplicationContext()).toastip(R.raw.error_con,t.getMessage() + " Load Data");
+                        loading.setVisibility(View.VISIBLE);
+                        no_connection();
+                    }
                 }
-            }
+            });
         });
-
     }
 
 
@@ -437,6 +440,10 @@ public class Home extends AppCompatActivity {
                     break;
                 case R.id.daily:
                     function.intent(DailyReports.class,Home.this);
+                    break;
+
+                case R.id.monthly:
+                    function.intent(Monthly.class,Home.this);
                     break;
             }
 
