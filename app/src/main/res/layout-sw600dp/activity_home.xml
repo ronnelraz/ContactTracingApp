@@ -118,6 +118,19 @@
                       />
 
                   <com.google.android.material.button.MaterialButton
+                      android:onClick="vitamins"
+                      android:layout_width="?attr/actionBarSize"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:background="?attr/selectableItemBackground"
+                      app:icon="@drawable/ic_icons8_hand_with_a_pill"
+                      app:iconSize="25dp"
+                      android:text="Vitamin"
+                      app:iconGravity="top"
+                      android:textSize="13sp"
+                      />
+
+                  <com.google.android.material.button.MaterialButton
                       android:onClick="employee"
                       android:layout_width="?attr/actionBarSize"
                       android:layout_height="wrap_content"
@@ -127,7 +140,7 @@
                       app:iconSize="30dp"
                       android:text="Employee"
                       app:iconGravity="top"
-                      android:textSize="14sp"
+                      android:textSize="11sp"
                       />
 
                   <com.google.android.material.button.MaterialButton
@@ -153,7 +166,7 @@
                       app:iconSize="30dp"
                       android:text="Block list"
                       app:iconGravity="top"
-                      android:textSize="13sp"
+                      android:textSize="10sp"
                       />
 
 

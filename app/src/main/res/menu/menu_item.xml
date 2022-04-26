@@ -9,12 +9,21 @@
         android:iconTint="@color/black"
         app:showAsAction="never"/>
 
+        <item
+            android:id="@+id/vitamins"
+            android:title="Vitamin"
+            android:icon="@drawable/ic_icons8_hand_with_a_pill"
+            android:iconTint="@color/black"
+            app:showAsAction="never"/>
+
     <item
         android:id="@+id/register"
         android:title="Register"
         android:icon="@drawable/icons8_add_user_male"
         android:iconTint="@color/black"
         app:showAsAction="never"/>
+
+
 
 
     <item

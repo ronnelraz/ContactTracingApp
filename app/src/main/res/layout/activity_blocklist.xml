@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:focusable="false"
     android:focusableInTouchMode="false"
-    tools:context=".Blocklist">
+    tools:context="com.razo.contacttracingapp.Blocklist">
 
 
     <com.google.android.material.button.MaterialButton
